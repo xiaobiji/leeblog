@@ -27,7 +27,7 @@ class Article extends Common
         $res=db('article')->alias('a')
             ->join('category b','b.id=a.cid')
             ->join('pics c','c.aid=a.id','LEFT')
-            ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
+            ->order('a.istop desc,a.istuijian,a.toptime Desc,a.addtime Desc')
             ->field('a.*,b.name,count(c.pic) as pic')
             ->where($map)
             ->group('a.id')
@@ -171,6 +171,29 @@ class Article extends Common
                 $value['istop']=0;
                 if($articleModel::update($value)){
                     return json(['code'=>1,'msg'=>"取消置顶成功"]);
+                }
+                return json(['code'=>0,'msg'=>"操作失败"]);
+            }
+
+        }
+    }
+    //置顶
+    public function istuijian(){
+        if(request()->isAjax()){
+            $data=input('post.');
+            $value=[];
+            $value['id']=$data['id'];
+            $articleModel=model('Article');
+            if($data['istuijian']==="true"){
+                $value['istuijian']=1;
+                if($articleModel::update($value)){
+                    return json(['code'=>1,'msg'=>"置顶成功"]);
+                }
+                return json(['code'=>0,'msg'=>"操作失败"]);
+            }else{
+                $value['istop']=0;
+                if($articleModel::update($value)){
+                    return json(['code'=>1,'msg'=>"取消推荐成功"]);
                 }
                 return json(['code'=>0,'msg'=>"操作失败"]);
             }

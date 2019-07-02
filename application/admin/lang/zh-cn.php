@@ -105,6 +105,8 @@
         'addtimetip'=>'请输入添加时间',
         'top'=>'是否置顶',
         'toptip'=>'置顶|取消',
+        'tuijian'=>'是否推荐',
+        'tuijiantip'=>'推荐|取消',
         'thum'=>'缩略图',
         'thumtip'=>'请上传缩略图',
         'filetip'=>'请上传文档文件',
