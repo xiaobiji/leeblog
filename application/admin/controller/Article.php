@@ -14,8 +14,6 @@ class Article extends Common
 
     //内容列表
     public function index($cid=null){
-
-
         if($cid){
             //查询所有子栏目id
             $cids = $this->getAllChildcateIds($cid);

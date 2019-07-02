@@ -17,6 +17,10 @@ class Index extends Common
             $six_cates[$k]['arts'] = $this->getArticles(7,$six_cates[$k]['id']);
         }
 
+        //获取首页两篇推荐文章
+        $tuijianData = $this->get_tuijian_articles(2);
+        //获取首页推荐栏目标签
+        $indexTagsData=$this->get_tags(5);
 
         //获取所有栏目标识
         $chanpinpids=db('category')
@@ -91,6 +95,8 @@ class Index extends Common
 
         $this->assign([
             'six_cates'=>$six_cates,
+            'tuijianData'=>$tuijianData,
+            'indexTagsData'=>$indexTagsData,
             'newchanpin'=>$newchanpin,
             'chanpinpids'=>$chanpinpids,
             'chanpinDatas'=>$chanpinDatas,

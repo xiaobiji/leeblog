@@ -162,15 +162,40 @@ class Common extends Controller
         return $res;
     }
 
+
     /**
      * 获取右侧栏目推荐文章
      * @return false|\PDOStatement|string|\think\Collection
      */
-    private function get_hot_articles(){
+    protected function get_tuijian_articles($limit='5'){
+        $res=db('article')
+            ->alias('a')
+            ->join('pics c','c.aid=a.id','LEFT')
+            ->order('a.sort desc,a.addtime desc')
+            ->field('a.id,a.title,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic')
+            ->group('a.id')
+            ->select();
+        foreach($res as $k=>$v){
+            $res[$k]['pic']=explode(',',$v['pic']);
+            if(empty($v['pic'][0])){
+                preg_match ('<img.*src=["](.*?)["].*?>',$v['content'],$match);
+                if($match){
+                    $res[$k]['pic'][0]='../'.$match[1];
+                }
+            }
+        }
+        return $res;
+    }
+
+    /**
+     * 获取右侧栏目热门文章
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    private function get_hot_articles($limit='5'){
         $res=db('article')
             ->order('sort desc,id desc')
             ->field('id,title,click_num,cmt_count')
-            ->limit(5)
+            ->limit($limit)
             ->select();
         return $res;
     }
@@ -178,11 +203,11 @@ class Common extends Controller
      * 获取右侧栏目点击量文章
      * @return false|\PDOStatement|string|\think\Collection
      */
-    private function get_click_articles(){
+    private function get_click_articles($limit='10'){
         $res=db('article')
             ->order('click_num desc,id desc')
             ->field('id,title,click_num,cmt_count')
-            ->limit(10)
+            ->limit($limit)
             ->select();
         return $res;
     }
@@ -190,10 +215,11 @@ class Common extends Controller
      * 获取右侧标签管理
      * @return false|\PDOStatement|string|\think\Collection
      */
-    private function get_tags(){
+    protected function get_tags($limit='5'){
         $res=db('tags')
             ->order('sort desc,id ASC')
             ->field('tname,id')
+            ->limit($limit)
             ->select();
         return $res;
     }
