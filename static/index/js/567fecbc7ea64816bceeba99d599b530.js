@@ -1,0 +1,10 @@
+document.write("");
+document.write(" <div class=\"fb\"><ul><p class=\"fbtime\"><span>2019-06-20 15:20:02</span> 444</p><p class=\"fbinfo\">5454</p></ul></div>");
+document.write(" <div class=\"fb\"><ul><p class=\"fbtime\"><span>2019-06-17 17:55:31</span> 4564</p><p class=\"fbinfo\">6549</p></ul></div>");
+document.write(" <div class=\"fb\"><ul><p class=\"fbtime\"><span>2019-06-17 17:54:56</span> 56</p><p class=\"fbinfo\">4654</p></ul></div>");
+document.write(" <div class=\"fb\"><ul><p class=\"fbtime\"><span>2019-05-20 14:37:13</span> admin</p><p class=\"fbinfo\">123</p></ul></div>");
+document.write(" <div class=\"fb\"><ul><p class=\"fbtime\"><span>2019-05-18 09:09:17</span> 刘青青</p><p class=\"fbinfo\">写的不错，</p></ul></div>");
+document.write(" <div class=\"fb\"><ul><p class=\"fbtime\"><span>2019-05-07 14:53:25</span> admin</p><p class=\"fbinfo\">eee</p></ul></div>");
+document.write(" <div class=\"fb\"><ul><p class=\"fbtime\"><span>2019-04-20 18:28:10</span> admin</p><p class=\"fbinfo\">123123</p></ul></div>");
+document.write(" <div class=\"fb\"><ul><p class=\"fbtime\"><span>2019-03-09 12:10:01</span> admin</p><p class=\"fbinfo\">eeee</p></ul></div>");
+document.write("");
