@@ -20,7 +20,7 @@ class Common extends Controller
         //获取全部导航栏目
         $cate=$this->getAllCate();
         //将全部导航栏目撰文html格式输出
-        $cate_html = $this->get_cate_html($cate);
+//        $cate_html = $this->get_cate_html($cate);
         $notice=$this->getNotice();
         //获取右侧栏目推荐文章
         $hot_articles=$this->get_hot_articles();
@@ -49,7 +49,7 @@ class Common extends Controller
         $this->user_id = 1;
         $this->checkweb($config['state'],$config['closeinfo']);
         $this->assign([
-            'cate'=>$cate_html,
+//            'cate'=>$cate_html,
             'allcate'=>$cate,
             'noticeData'=>$notice,
             'hot_articles'=>$hot_articles,
@@ -103,7 +103,6 @@ class Common extends Controller
 //                    unset($tree[$k]);
 //            }
         }
-
         return $tree;
     }
 

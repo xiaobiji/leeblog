@@ -23,13 +23,13 @@
                 <li><a href="/" title="首页">网站首页</a></li>
                 {volist name="allcate" id="vo"}
                 <li class="menu"><a href="/category/{$vo.id}.html" >{$vo.name}</a>
-                    {if $vo.child}
+                    <?php if(isset($vo['child'])){ ?>
                     <ul class="sub">
                         {volist name="vo.child" id="cvo"}
                         <li><a href="/category/{$cvo.id}.html">{$cvo.name}</a></li>
                         {/volist}
                     </ul>
-                    {/if}
+                    <?php } ?>
                         <span>
 
                         </span>
