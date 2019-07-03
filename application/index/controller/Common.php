@@ -193,6 +193,8 @@ class Common extends Controller
             }
             if($ids){
                 $map['a.id']=array('not in',"'".$ids."'");
+            }else{
+                $map ='';
             }
             $data=db('article')
                 ->alias('a')
