@@ -22,10 +22,14 @@ class Common extends Controller
         //将全部导航栏目撰文html格式输出
 //        $cate_html = $this->get_cate_html($cate);
         $notice=$this->getNotice();
-        //获取右侧栏目推荐文章
+        //获取右侧栏目热门文章
         $hot_articles=$this->get_hot_articles();
+        //获取前8篇推荐文章
+        $tuijianData = $this->get_tuijian_articles(8);
         //获取右侧栏目点击量文章
-        $click_articles=$this->get_click_articles();
+        $click_articles=$this->get_click_articles(5);
+        //获取右侧栏目喜欢量，点赞量文章
+        $like_articles=$this->get_like_articles(10);
         //获取右侧栏目标签
         $tagsData=$this->get_tags();
         //获取右侧友情链接
@@ -54,6 +58,8 @@ class Common extends Controller
             'noticeData'=>$notice,
             'hot_articles'=>$hot_articles,
             'click_articles'=>$click_articles,
+            'tuijianData'=>$tuijianData,
+            'like_articles'=>$like_articles,
             'tagsData'=>$tagsData,
             'linksData'=>$linksData,
             'currtype'=>$currtype,
@@ -72,7 +78,7 @@ class Common extends Controller
         $res=db('category')
             ->where('isshow',1)
             ->order('sort desc,id Asc')
-            ->field('id,name,type,stype,url,pid,pic')
+            ->field('id,name,type,stype,url,pid,pic,remark')
             ->select();
         $res = $this->getallcates($res);
         return $res;
@@ -171,10 +177,35 @@ class Common extends Controller
         $res=db('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
+            ->join('category t','a.cid=t.id','LEFT')
+            ->where('istuijian',1)
+            ->field('a.id,a.title,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic,t.name as cname')
             ->order('a.sort desc,a.addtime desc')
-            ->field('a.id,a.title,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic')
             ->group('a.id')
+            ->limit($limit)
             ->select();
+        $res_num = count($res);
+
+        if($limit>$res_num){
+            $ids='';
+            foreach ($res as $k=>$v){
+                $ids .= ','.$v['id'];
+            }
+            if($ids){
+                $map['a.id']=array('not in',"'".$ids."'");
+            }
+            $data=db('article')
+                ->alias('a')
+                ->join('pics c','c.aid=a.id','LEFT')
+                ->where($map)
+                ->field('a.id,a.title,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic')
+                ->order('a.sort desc,a.addtime desc')
+                ->group('a.id')
+                ->limit($limit-$res_num)
+                ->select();
+           $res = array_merge($res,$data);
+
+        }
         foreach($res as $k=>$v){
             $res[$k]['pic']=explode(',',$v['pic']);
             if(empty($v['pic'][0])){
@@ -207,6 +238,18 @@ class Common extends Controller
         $res=db('article')
             ->order('click_num desc,id desc')
             ->field('id,title,click_num,cmt_count')
+            ->limit($limit)
+            ->select();
+        return $res;
+    }
+    /**
+     * 获取右侧栏目点击量文章
+     * @return false|\PDOStatement|string|\think\Collection
+     */
+    private function get_like_articles($limit='10'){
+        $res=db('article')
+            ->order('like_num desc,id desc')
+            ->field('id,title,like_num,cmt_count')
             ->limit($limit)
             ->select();
         return $res;

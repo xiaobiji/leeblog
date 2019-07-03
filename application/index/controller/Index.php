@@ -16,19 +16,16 @@ class Index extends Common
         foreach ($six_cates as $k =>$v){
             $six_cates[$k]['arts'] = $this->getArticles(7,$six_cates[$k]['id']);
         }
-
-        //获取首页两篇推荐文章
-        $tuijianData = $this->get_tuijian_articles(2);
+        //获取最新文章
+        $articles = $this->getnewarticle(8);
         //获取首页推荐栏目标签
         $indexTagsData=$this->get_tags(5);
-
         //获取所有栏目标识
         $chanpinpids=db('category')
             ->where('mark','chanpin')
             ->field('id,name,pid')
             ->order('sort Desc,id asc')
             ->select();
-
         $chanpin=$this->getchanpin('chanpin',6);
         $xinwen=$this->getchanpin('news',3);
         $anli=$this->getchanpin('anli',3);
@@ -43,8 +40,6 @@ class Index extends Common
                 unset($chanpinpids[$k]);
             }
         }
-
-
         $chanpinpid = $this->getmarkid('chanpin');
         $yanfaid = $this->getmarkid('yanfa');
         $newsid = $this->getmarkid('news');
@@ -58,7 +53,7 @@ class Index extends Common
         $about=$this->getabout();
         $huoban=$this->gethuoban();
         $case = $this->getCase();
-        $articles = $this->getnewarticle();
+
         $res_pid = db('category')->where('mark','xinwen')->field('id')->find();
         $news_id = db('category')->where('pid',$res_pid['id'])->field('id,name')->select();
         //获取手機端导航栏HTML样式
@@ -95,7 +90,7 @@ class Index extends Common
 
         $this->assign([
             'six_cates'=>$six_cates,
-            'tuijianData'=>$tuijianData,
+            'articles'=>$articles,
             'indexTagsData'=>$indexTagsData,
             'newchanpin'=>$newchanpin,
             'chanpinpids'=>$chanpinpids,
@@ -109,7 +104,6 @@ class Index extends Common
             'anliid'=>$anliid,
             'shipinid'=>$shipinid,
             'about'=>$about,
-            'articles'=>$articles,
             'chanpin'=>$chanpin,
             'xinwen'=>$xinwen,
             'shipin'=>$shipin,
@@ -141,8 +135,9 @@ class Index extends Common
         $data = Db::name('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
-            ->order('a.addtime Desc')
-            ->field('a.id,a.title,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic')
+            ->join('category t','a.cid=t.id','LEFT')
+            ->order('a.toptime desc,a.addtime Desc')
+            ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic,t.name as cname')
             ->group('a.id')
             ->paginate($num,$count)
             ->each(function($item, $key){

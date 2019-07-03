@@ -61,6 +61,8 @@ class Article extends Common
             $click['ip']=$ip;
             model('Click')->allowField(true)->save($click);
             $articleData['click'] = $articleData['click']+1;
+
+            model('Article')->allowField(true)->save(array('click_num',$articleData['click']),['id' => $id]);
         }
         //添加浏览量，点击量 判断浏览ip  结束
 
