@@ -1,70 +1,89 @@
-<div class="col-sm-3 col-md-3 mt-20">
-    {if !empty($childCate)}
-    <div class="panel panel-primary mb-20">
-        <div class="panel-body">
-            {volist name="childCate" id="vo"}
-            <a class="btn btn-primary-outline radius nav-btn" href="{:url('category/index',['id'=>$vo['id']])}">{$vo.name|mb_substr=0,6,'utf-8'}</a>
-            {/volist}
-        </div>
-    </div>
-    {/if}
 
-    <!--标签-->
-    <div class="bg-fff box-shadow radius mb-20">
-        <div class="tab-category">
-            <a href=""><strong>标签云</strong></a>
-        </div>
-        <form action="Search/index.php">
-            <div class="tab-category-item">
-                <div class="tags">
-                    {volist name="tagsData" id="vo"}
-                    <a href="{:url('search/tags',['keywords'=>$vo['id']])}">{$vo.tname}</a>
-                    {/volist}
-                </div>
-            </div>
-        </form>
-    </div>
-    <!--热门推荐-->
-    <div class="bg-fff box-shadow radius mb-20">
-        <div class="tab-category">
-            <a href=""><strong>热门推荐</strong></a>
-        </div>
-        <div class="tab-category-item">
-            <ul class="index_recd">
-                {volist name="hot_articles" id="vo"}
-                <li>
-                    <a href="{:url('article/index',['id'=>$vo['id']])}" target="_blank">{$vo.title}</a>
-                    <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe622;</i> {$vo.cmt_count} </p>
-                </li>
-                {/volist}
-            </ul>
-        </div>
-    </div>
-    <!--点击排行-->
-    <div class="bg-fff box-shadow radius mb-20">
-        <div class="tab-category">
-            <a href=""><strong>点击排行</strong></a>
-        </div>
-        <div class="tab-category-item">
-            <ul class="index_recd clickTop">
-                {volist name="click_articles" id="vo"}
-                <li>
-                    <a href="{:url('article/index',['id'=>$vo['id']])}" target="_blank">{$vo.title}</a>
-                    <p class="hits"><i class="Hui-iconfont" title="点击量">&#xe6c1;</i> {$vo.click_num}° </p>
-                </li>
-                {/volist}
-            </ul>
-        </div>
-    </div>
-    <!--友情链接-->
-    <div class="bg-fff box-shadow radius mb-20">
-        <div class="tab-category">
-            <a href=""><strong>隔壁邻居</strong></a>
-        </div>
-        <div class="tab-category-item">
-            {volist name="linksData" id="vo"}
-            <span><i class="Hui-iconfont">&#xe6f1;</i><a href="{$vo.url}" target="_blank" class="btn-link">{$vo.name}</a></span>
-            {/volist}
-        </div>
-    </div>
+{if !empty($childCate)}
+<div class="whitebg cloud">
+    <h2 class="htitle">导航栏目</h2>
+    <ul>
+        {volist name="childCate" id="vo"}
+        <a href="/category/{$vo.id}.html">{$vo.name|mb_substr=0,6,'utf-8'}</a>
+        {/volist}
+    </ul>
+</div>
+{/if}
+
+<div class="whitebg paihang">
+    <h2 class="htitle">点击排行</h2>
+    {volist name="click_articles" id="vo" offset='0' length='1'}
+    <section class="topnews imgscale"><a href="/article/{$vo.id}.html"><img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"><span>{$vo.title}</span></a></section>
+    {/volist}
+    <ul>
+        {volist name="click_articles" id="vo" offset='1'}
+        <li><i></i><a href="/article/{$vo.id}.html" title="{$vo.title}" target="_blank">{$vo.title}</a></li>
+        {/volist}
+    </ul>
+</div>
+<div class="whitebg tuijian">
+    <h2 class="htitle">本栏推荐</h2>
+
+    {volist name="tuijianArticles" id="vo" offset='0' length='1'}
+    <section class="topnews imgscale"><a href="/article/{$vo.id}.html"><img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"><span>{$vo.title}</span></a></section>
+    {/volist}
+    <ul>
+        {volist name="tuijianArticles" id="vo" offset='1'}
+        <li><a href="/article/{$vo.id}.html" title="{$vo.title}" target="_blank"><i><img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"></i>
+            <p>{$vo.title}</p>
+        </a></li>
+        {/volist}
+
+    </ul>
+</div>
+
+<!--<div class="ad whitebg imgscale">-->
+    <!--<ul>-->
+        <!--<a href='/category/{$allcate.0.id}.html' target=_blank><img src='{if($allcate.0.pic)}/public/{$allcate.0.pic}{else/}__INDEX__/picture/noimg.jpg{/if}'></a></ul>-->
+<!--</div>-->
+
+<div class="whitebg cloud">
+    <h2 class="htitle">标签云</h2>
+    <ul>
+        {volist name="tagsData" id="vo"}
+        <a href="{:url('search/tags',['keywords'=>$vo['id']])}">{$vo.tname}</a>
+        {/volist}
+    </ul>
+</div>
+
+<div class="whitebg wenzi">
+    <h2 class="htitle">猜你喜欢</h2>
+    <ul>
+        {volist name="like_articles" id="vo"}
+        <li><a href="/article/{$vo.id}.html">{$vo.title}</a></li>
+        {/volist}
+    </ul>
+</div>
+<div class="links whitebg">
+    <h2 class="htitle">隔壁邻居</h2>
+    <ul>
+        {volist name="linksData" id="vo"}
+        <li><a href="{$vo.url}" target="_blank">{$vo.name}</a></li>
+        {/volist}
+    </ul>
+</div>
+<!--<div class="ad whitebg imgscale">-->
+    <!--<ul>-->
+        <!--<a href='/category/{$allcate.1.id}.html' target=_blank><img src='{if($allcate.1.pic)}/public/{$allcate.1.pic}{else/}__INDEX__/picture/noimg.jpg{/if}'></a>-->
+    <!--</ul>-->
+<!--</div>-->
+
+<!--<div class="whitebg tongji">-->
+    <!--<h2 class="htitle">站点信息</h2>-->
+    <!--<ul>-->
+        <!--<li><b>建站时间</b>：2018-10-24</li>-->
+        <!--<li><b>网站程序</b>：帝国CMS7.5</li>-->
+        <!--<li><b>主题模板</b>：<a href="http://www.yangqq.com" target="_blank">《今夕何夕》</a></li>-->
+        <!--<li><b>文章统计</b>：<a href="/time/" target="_blank">31</a>篇文章</li>-->
+        <!--<li><b>标签管理</b>：<a href="/tags.html" target="_blank">标签云</a></li>-->
+        <!--<li><b>统计数据</b>：<a href="/" target="_blank" >百度统计</a></li>-->
+        <!--<li><b>微信公众号</b>：扫描二维码，关注我们</li>-->
+        <!--<li class="tongji_gzh"><a href='/' target=_blank><img src='picture/wxgzh.jpg'></a></li>-->
+    <!--</ul>-->
+<!--</div>-->
 </div>

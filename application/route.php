@@ -13,10 +13,10 @@
 use think\Route;
 //后台登录
 
-//http://tychb.huayu8.cn/category/81.html
-//Route::rule('category/:id','index/Category/index','get','',['id'=>'\d+']);
-//Route::rule('article/:id','index/article/index','get','',['id'=>'\d+']);
-//Route::rule('search/:keywords','index/Search/index','get','',['keywords'=>'\d+']);
+http://www.58lee.com/category/81.html
+Route::rule('category/:id','index/Category/index','get','',['id'=>'\d+']);
+Route::rule('article/:id','index/article/index','get','',['id'=>'\d+']);
+Route::rule('search/:keywords','index/Search/index','get','',['keywords'=>'\d+']);
 
 
 // Route::rule('admin_jghc','admin/login/index','get');

@@ -238,10 +238,22 @@ class Common extends Controller
      */
     private function get_click_articles($limit='10'){
         $res=db('article')
+            ->alias('a')
             ->order('click_num desc,id desc')
-            ->field('id,title,click_num,cmt_count')
+            ->join('pics c','c.aid=a.id','LEFT')
+            ->field('a.id,a.title,a.click_num,a.cmt_count,a.content,GROUP_CONCAT(c.pic) as pic')
+            ->group('a.id')
             ->limit($limit)
             ->select();
+        foreach($res as $k=>$v){
+            $res[$k]['pic']=explode(',',$v['pic']);
+            if(empty($v['pic'][0])){
+                preg_match ('<img.*src=["](.*?)["].*?>',$v['content'],$match);
+                if($match){
+                    $res[$k]['pic'][0]='../'.$match[1];
+                }
+            }
+        }
         return $res;
     }
     /**
@@ -397,7 +409,7 @@ class Common extends Controller
     /**
      * lee获取栏目页文章,按照发布时间排序
      */
-    protected function getArticles($num='10',$id,$notincluderemark=''){
+    protected function getArticles($num='10',$id,$notincluderemark='',$where='1,1'){
 
         if($notincluderemark){
             $mapb['b.mark'] =  array('neq',$notincluderemark);
@@ -419,7 +431,8 @@ class Common extends Controller
             ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
             ->where($map)
             ->where($mapb)
-            ->field('a.id,a.title,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic')
+            ->where("'".$where."'")
+            ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
             ->group('a.id')
             ->paginate($num,$count)
             ->each(function($item, $key){

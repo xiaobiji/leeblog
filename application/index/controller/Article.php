@@ -25,10 +25,10 @@ class Article extends Common
             ->join('pics c','c.aid=a.id','LEFT')
             ->join('click k','k.aid=a.id','LEFT')
             ->where('a.id',$id)
-            ->field('count(k.aid) as click,a.id,a.cid,a.title,a.content,a.desc,a.remark,a.author,a.addtime,a.cmt_count,a.keyword,a.desc,b.name,b.mark,GROUP_CONCAT(c.pic) as pic')
+            ->field('count(k.aid) as click,a.id,a.cid,a.title,a.content,a.desc,a.source,a.sourceurl,a.remark,a.author,a.addtime,a.cmt_count,a.keyword,a.desc,b.name as cname,b.mark,GROUP_CONCAT(c.pic) as pic')
             ->find();
 
-        if(!$articleData['cid'] ||!$articleData['name'] ){
+        if(!$articleData['cid'] ||!$articleData['cname'] ){
 
             return $this->fetch(APP_PATH.'/error/404.html');//404页面我放在application下面，可以自行指定
         }
@@ -61,8 +61,7 @@ class Article extends Common
             $click['ip']=$ip;
             model('Click')->allowField(true)->save($click);
             $articleData['click'] = $articleData['click']+1;
-
-            model('Article')->allowField(true)->save(array('click_num',$articleData['click']),['id' => $id]);
+            Db::name('article')->where('id',$id)->update(['click_num'=>$articleData['click']]);
         }
         //添加浏览量，点击量 判断浏览ip  结束
 
@@ -76,6 +75,20 @@ class Article extends Common
             ->field('id,art_template')
             ->find();
 
+        //当前所在栏目的推荐文章 开始
+        $cids = $this->getAllChildcateIds($articleData['cid']);
+        $tuijianArticles = $this->getcateArticles(10,$cids,'a.istuijian,1');
+        //当前所在栏目的推荐文章 结束
+
+        //获取随机文章
+        $suijiData =$this->getRandArticle(4);
+        //根据标签获取相关文章
+        $xiangguanData = Db::name('article')
+            ->where('keyword','in',$articleData['keyword'])
+            ->where('id','neq',$articleData['id'])
+            ->limit(4)
+            ->field('title,id')
+            ->select();
         //获取标签名称
         $keywords_id = explode(",",$articleData['keyword']);
         $keywords=[];
@@ -132,10 +145,14 @@ class Article extends Common
         $tuijianArticle = $this->getTuijianArticle(4,$this->getAllChildcateIds($this->getParentId($articleData['cid'])),$id);
 
         $yanfa=$this->getchanpin('yanfa',8);
+
         $this->assign([
             'childCate'=>$childCate,
             'tuijianArticle'=>$tuijianArticle,
             'articleData'=>$articleData,
+            'xiangguanData'=>$xiangguanData,
+            'suijiData'=>$suijiData,
+            'tuijianArticles'=>$tuijianArticles,
             'position'=>$position,
             'front'=>$front,
             'after'=>$after,
@@ -172,7 +189,63 @@ class Article extends Common
         return $tuijianArticle;
     }
 
+    private function getRandArticle($num){
+        //获取随机文章
+        $res =Db::name('article')
+            ->alias('a')
+            ->join('pics c','c.aid=a.id','LEFT')
+            ->where('rand()')
+            ->field('a.id,a.title,a.content,a.remark,GROUP_CONCAT(c.pic) as pic')
+            ->group('a.id')
+            ->limit($num)
+            ->select();
+        foreach($res as $k=>$v){
+            $res[$k]['pic']=explode(',',$v['pic']);
+            if(empty($v['pic'][0])){
+                preg_match ('<img.*src=["](.*?)["].*?>',$v['content'],$match);
+                if($match){
+                    $res[$k]['pic'][0]='../'.$match[1];
+                }
+            }
+        }
+        return $res;
 
+    }
+
+
+    /**
+     * lee获取栏目页本栏目下推荐文章,
+     */
+    protected function getcateArticles($num='10',$id){
+        $map['a.cid']= array('in',$id);
+        $res=db('article')
+            ->join('category b','b.id=a.cid')
+            ->alias('a')
+            ->where($map)
+            ->select();
+        $count = count($res);
+        $data = db('article')
+            ->alias('a')
+            ->join('category b','b.id=a.cid')
+            ->join('pics c','c.aid=a.id','LEFT')
+            ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
+            ->where($map)
+            ->where('istuijian',1)
+            ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
+            ->group('a.id')
+            ->paginate($num,$count)
+            ->each(function($item, $key){
+                $item['pic']=explode(',',$item['pic']);
+                if(empty($item['pic'][0])){
+                    preg_match ('<img.*src=["](.*?)["].*?>',$item['content'],$match);
+                    if($match){
+                        $item['pic'][0]='../'.$match[1];
+                    }
+                }
+                return $item;
+            });
+        return $data;
+    }
 
     //无限极循环 取出回复信息
     public function get_reply($comment_id,$from_id){
