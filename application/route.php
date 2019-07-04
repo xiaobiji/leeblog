@@ -13,7 +13,7 @@
 use think\Route;
 //后台登录
 
-http://www.58lee.com/category/81.html
+//http://www.58lee.com/category/81.html
 Route::rule('category/:id','index/Category/index','get','',['id'=>'\d+']);
 Route::rule('article/:id','index/article/index','get','',['id'=>'\d+']);
 Route::rule('search/:keywords','index/Search/index','get','',['keywords'=>'\d+']);
