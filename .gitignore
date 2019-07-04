@@ -1,10 +1,10 @@
 .idea
 composer
 .lock
-.log
+*.log
 runtime
 
 thinkphp/library/think/console/command/Make.php
 
 thinkphp/library/think/console/command/optimize/Config.php
-application\database.php
+application/database.php
