@@ -10,6 +10,16 @@
 </div>
 {/if}
 
+<div class="whitebg cloud">
+    <h2 class="htitle">标签云</h2>
+    <ul>
+        {volist name="tagsData" id="vo"}
+        <!--<a href="{:url('search/tags',['keywords'=>$vo['id']])}">{$vo.tname}</a>-->
+        <a href="/search/tags/{$vo.id}.html">{$vo.tname}</a>
+        {/volist}
+    </ul>
+</div>
+
 <div class="whitebg paihang">
     <h2 class="htitle">点击排行</h2>
     {volist name="click_articles" id="vo" offset='0' length='1'}
@@ -17,7 +27,7 @@
     {/volist}
     <ul>
         {volist name="click_articles" id="vo" offset='1'}
-        <li><i></i><a href="/article/{$vo.id}.html" title="{$vo.title}" target="_blank">{$vo.title}</a></li>
+        <li><i></i><a href="/article/{$vo.id}.html" title="{$vo.title}">{$vo.title}</a></li>
         {/volist}
     </ul>
 </div>
@@ -29,7 +39,7 @@
     {/volist}
     <ul>
         {volist name="tuijianArticles" id="vo" offset='1'}
-        <li><a href="/article/{$vo.id}.html" title="{$vo.title}" target="_blank"><i><img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"></i>
+        <li><a href="/article/{$vo.id}.html" title="{$vo.title}"><i><img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"></i>
             <p>{$vo.title}</p>
         </a></li>
         {/volist}
@@ -42,14 +52,7 @@
         <!--<a href='/category/{$allcate.0.id}.html' target=_blank><img src='{if($allcate.0.pic)}/public/{$allcate.0.pic}{else/}__INDEX__/picture/noimg.jpg{/if}'></a></ul>-->
 <!--</div>-->
 
-<div class="whitebg cloud">
-    <h2 class="htitle">标签云</h2>
-    <ul>
-        {volist name="tagsData" id="vo"}
-        <a href="{:url('search/tags',['keywords'=>$vo['id']])}">{$vo.tname}</a>
-        {/volist}
-    </ul>
-</div>
+
 
 <div class="whitebg wenzi">
     <h2 class="htitle">猜你喜欢</h2>
@@ -63,7 +66,7 @@
     <h2 class="htitle">隔壁邻居</h2>
     <ul>
         {volist name="linksData" id="vo"}
-        <li><a href="{$vo.url}" target="_blank">{$vo.name}</a></li>
+        <li><a href="{$vo.url}"  target="_blank">{$vo.name}</a></li>
         {/volist}
     </ul>
 </div>
@@ -78,10 +81,10 @@
     <!--<ul>-->
         <!--<li><b>建站时间</b>：2018-10-24</li>-->
         <!--<li><b>网站程序</b>：帝国CMS7.5</li>-->
-        <!--<li><b>主题模板</b>：<a href="http://www.yangqq.com" target="_blank">《今夕何夕》</a></li>-->
-        <!--<li><b>文章统计</b>：<a href="/time/" target="_blank">31</a>篇文章</li>-->
-        <!--<li><b>标签管理</b>：<a href="/tags.html" target="_blank">标签云</a></li>-->
-        <!--<li><b>统计数据</b>：<a href="/" target="_blank" >百度统计</a></li>-->
+        <!--<li><b>主题模板</b>：<a href="http://www.yangqq.com">《今夕何夕》</a></li>-->
+        <!--<li><b>文章统计</b>：<a href="/time/">31</a>篇文章</li>-->
+        <!--<li><b>标签管理</b>：<a href="/tags.html">标签云</a></li>-->
+        <!--<li><b>统计数据</b>：<a href="/" >百度统计</a></li>-->
         <!--<li><b>微信公众号</b>：扫描二维码，关注我们</li>-->
         <!--<li class="tongji_gzh"><a href='/' target=_blank><img src='picture/wxgzh.jpg'></a></li>-->
     <!--</ul>-->
