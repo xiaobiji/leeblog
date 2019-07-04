@@ -1,7 +1,7 @@
 .idea
 composer
 .lock
-.log
+*.log
 runtime
 
 thinkphp/library/think/console/command/Make.php

@@ -194,7 +194,7 @@ class Article extends Common
         $res =Db::name('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
-            ->orderRaw('rand()')    
+            ->orderRaw('rand()')
             ->field('a.id,a.title,a.content,a.remark,GROUP_CONCAT(c.pic) as pic')
             ->group('a.id')
             ->limit($num)
