@@ -31,6 +31,7 @@ class Category extends Common
             $tuijianArticles = $this->getcateArticles(5,$cids);
             //获取当前栏目信息
         }
+
         //查询当前栏目下所有子栏目
         $childCate = $this->getChildCate($id);
         $style = 'block';
