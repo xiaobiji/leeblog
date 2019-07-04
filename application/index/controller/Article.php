@@ -165,6 +165,49 @@ class Article extends Common
         return $this->fetch($art_template['art_template']);
     }
 
+    public function like(){
+
+        if(request()->isAjax()){
+            $aid = $_REQUEST['aid'];
+            if($aid){
+                $ip = $this->getip();
+                $uname = session('username');
+                $likeip =  $likeData = Db::name('articlelike')
+                    ->where('ip',$ip)
+                    ->field('id,uname,ip')
+                    ->find();
+                $likeuname = Db::name('articlelike')
+                    ->where('uname',$uname)
+                    ->field('id,uname,ip')
+                    ->find();
+
+                if($likeuname['id']){
+                    Db::name('articlelike')->where('id',$likeuname['id'])->update(['ip'=>$likeuname['ip']]);
+                    return $this->json(202,'','已经点赞');
+                }
+                if($likeip['id']){
+                    return $this->json(203,'','已经点赞');
+                }
+
+                $data['ip']=$ip;
+                $data['aid']= $aid;
+                $data['uname']= $uname;
+                $data['like_time']= time();
+                $res = Db::name('articlelike')->insert($data);
+                if($res){
+                    return $this->json(201,'','点赞成功');
+                }else{
+                    return $this->json(204,'','点赞失败');
+                }
+            }else{
+                return $this->json(400,'','参数错误');
+            }
+        }else{
+            return $this->json(401,'','违法提交');
+        }
+
+    }
+
     /**
      * lee获取栏目页文章,按照发布时间排序
      */

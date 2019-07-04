@@ -39,9 +39,16 @@
           {if $articleData.sourceurl}
           <p class="share"><b>文章来源：{$articleData.source}</b><a href="{$articleData.sourceurl}" >{$articleData.sourceurl}</a></p>
           {/if}
-          <p>Tags：{volist name="keyData" id="vo"}<a href="search.html?keyword={$vo.tname}">{$vo.tname}</a> &nbsp; {/volist}</p>
+          <p>Tags：{volist name="keyData" id="vo"}<a href="/search/tags/{$vo.id}.html">{$vo.tname}</a> &nbsp; {/volist}</p>
 
-        <p><span class="diggit"><a href="JavaScript:makeRequest('/e/public/digg/?classid=1&id=4&dotop=1&doajax=1&ajaxarea=diggnum','EchoReturnedText','GET','');"> 很赞哦！ </a>(<b id="diggnum"><script type="text/javascript" src="__INDEX__/js/f7e5a77015674fec9e6239cc455a0caf.js"></script></b>)</span></p>
+        <p>
+            <span class="diggit">
+                <a href="javascript:;" onclick="articlelike({$articleData.id})">
+                    很赞哦！
+                </a>
+                (<b id="diggnum"><script type="text/javascript" src="__INDEX__/js/f7e5a77015674fec9e6239cc455a0caf.js"></script></b>)
+            </span>
+        </p>
         <div class="nextinfo">
             {if condition="$front"}
             <p>上一篇：<a href="/article/{$front.id}.html">{$front['title']}</a></p>
