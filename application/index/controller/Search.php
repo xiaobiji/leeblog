@@ -15,7 +15,6 @@ class Search extends Common
      */
     public function index()
     {
-
         if($_REQUEST){
             $keywords = $_REQUEST['keywords'];
         }else{
@@ -29,8 +28,6 @@ class Search extends Common
                 //获取当前栏目下所有文章，包括子栏目下文章
                 $childCate[$k]['articles'] = $this->getArticles(10,$vcids);
             }
-
-
             $where['a.title'] = array('like','%'.$keywords.'%');
             $style = 'none';
             //获取左侧导航栏HTML样式
@@ -39,11 +36,12 @@ class Search extends Common
                 ->where('title','like','%'.$keywords.'%')
                 ->select();
             $count = count($res);
-            $data = Db::name('article')
+            $articles = Db::name('article')
                 ->alias('a')
+                ->join('category b','b.id=a.cid')
                 ->join('pics c','c.aid=a.id','LEFT')
                 ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
-                ->field('a.id,a.title,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic')
+                ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
                 ->where($where)
                 ->group('a.id')
                 ->paginate(10,$count,['query' => ['keywords'=>$keywords]])
@@ -65,14 +63,14 @@ class Search extends Common
 
             $this->assign([
                 'keyWords'=>$keywords,
-                'data'=>$data,
+                'articles'=>$articles,
                 'childCate'=>$childCate,
                 'yanfa'=>$yanfa,
                 'seo'=>$seo,
             ]);
 
             if($count>0){
-                return view();
+                return $this->fetch('index');
             }else{
                 $this->error('搜索无数据');
             }
@@ -95,24 +93,40 @@ class Search extends Common
                 ->where('title','like','%'.$tdata['tname'].'%')
                 ->select();
             $count = count($res);
-            $data = Db::name('article')
+            $articles = Db::name('article')
+                ->alias('a')
+                ->join('category b','b.id=a.cid')
+                ->join('pics c','c.aid=a.id','LEFT')
                 ->where('title','like','%'.$tdata['tname'].'%')
-                ->field('id,title,cid,desc,thumb,author,addtime,click_num,cmt_count')
-                ->order(['id'=>'desc'])
-                ->paginate(10,$count);
+                ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
+                ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
+                ->paginate(10,$count)
+                ->each(function($item, $key){
+                    $item['pic']=explode(',',$item['pic']);
+                    if(empty($item['pic'][0])){
+                        preg_match ('<img.*src=["](.*?)["].*?>',$item['content'],$match);
+                        if($match){
+                            $item['pic'][0]='../'.$match[1];
+                        }
+                    }
+                    return $item;
+                });
+            $seo['title']='搜索'.$keywords;
+            $seo['keyword']='搜索'.$keywords;
+            $seo['desc']='搜索'.$keywords;
+
             $this->assign([
                 'keyWords'=>$keywords,
-                'data'=>$data,
+                'articles'=>$articles,
+                'seo'=>$seo,
             ]);
             if($count>0){
-                return view();
+                return $this->fetch('index');
             }else{
                 $this->error('搜索无数据');
             }
         }else{
             $this->error('请输入关键词');
         }
-
     }
-
 }

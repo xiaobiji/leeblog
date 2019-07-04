@@ -15,8 +15,9 @@ use think\Route;
 
 //http://www.58lee.com/category/81.html
 Route::rule('category/:id','index/Category/index','get','',['id'=>'\d+']);
-Route::rule('article/:id','index/article/index','get','',['id'=>'\d+']);
-Route::rule('search/:keywords','index/Search/index','get','',['keywords'=>'\d+']);
+Route::rule('article/:id','index/Article/index','get','',['id'=>'\d+']);
+Route::rule('search/:keywords','index/Search/index','request','',['keywords'=>'\d+']);
+Route::rule('search/tags/:keywords','index/Search/tags','get','',['keywords'=>'\d+']);
 
 
 // Route::rule('admin_jghc','admin/login/index','get');

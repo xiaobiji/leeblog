@@ -144,20 +144,29 @@
             <p>现居：{$config.address}</p>
             <p>Email：{$config.email}</p>
             <ul class="linkmore">
-                <li><a href="/" target="_blank" class="iconfont icon-zhuye" title="网站地址"></a></li>
-                <li><a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email={$config.email}" target="_blank"
+                <li><a href="/" class="iconfont icon-zhuye" title="网站地址"></a></li>
+                <li><a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email={$config.email}"
                        class="iconfont icon-youxiang" title="我的邮箱"></a></li>
-                <li><a href="http://wpa.qq.com/msgrd?v=3&uin={$config.online}&site=qq&menu=yes" target="_blank"
+                <li><a href="http://wpa.qq.com/msgrd?v=3&uin={$config.online}&site=qq&menu=yes"
                        class="iconfont icon---" title="QQ联系我"></a></li>
-                <li id="weixin"><a href="#" target="_blank" class="iconfont icon-weixin" title="关注我的微信"></a><i><img
+                <li id="weixin"><a href="#" class="iconfont icon-weixin" title="关注我的微信"></a><i><img
                         src="/public/uploads/{$config.weixin}"></i></li>
+            </ul>
+        </div>
+        <div class="whitebg cloud">
+            <h2 class="htitle">标签云</h2>
+            <ul>
+                {volist name="tagsData" id="vo"}
+                <!--<a href="{:url('search/tags',['keywords'=>$vo['id']])}">{$vo.tname}</a>-->
+                <a href="/search/tags/{$vo.id}.html">{$vo.tname}</a>
+                {/volist}
             </ul>
         </div>
         <div class="whitebg notice">
             <h2 class="htitle">热门文章</h2>
             <ul>
                 {volist name="hot_articles" id="vo"}
-                <li><a href="/article/{$vo.id}.html" title="{$vo.title}" target="_blank">{$vo.title}</a>
+                <li><a href="/article/{$vo.id}.html" title="{$vo.title}">{$vo.title}</a>
                 </li>
                 {/volist}
             </ul>
@@ -168,7 +177,7 @@
             </section>
             <ul>
                 {volist name="click_articles" id="vo"}
-                <li><i></i><a href="/article/{$vo.id}.html" title="{$vo.title}" target="_blank">{$vo.title}</a></li>
+                <li><i></i><a href="/article/{$vo.id}.html" title="{$vo.title}">{$vo.title}</a></li>
                 {/volist}
             </ul>
         </div>
@@ -178,7 +187,7 @@
             </section>
             <ul>
                 {volist name="tuijianData" id="vo"}
-                <li><a href="/article/{$vo.id}.html" title="{$vo.title}" target="_blank"><i><img
+                <li><a href="/article/{$vo.id}.html" title="{$vo.title}"><i><img
                         src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"></i>
                     <p>{$vo.title}</p>
                 </a></li>
@@ -195,7 +204,7 @@
             <h2 class="htitle">猜你喜欢</h2>
             <ul>
                 {volist name="like_articles" id="vo"}
-                <li><a target="_blank" href="/article/{$vo.id}.html">{$vo.title}</a></li>
+                <li><a href="/article/{$vo.id}.html">{$vo.title}</a></li>
                 {/volist}
             </ul>
         </div>
@@ -208,10 +217,10 @@
         <!--<ul>-->
         <!--<li><b>建站时间</b>：2018-10-24</li>-->
         <!--<li><b>网站程序</b>：帝国CMS7.5</li>-->
-        <!--<li><b>主题模板</b>：<a href="http://www.yangqq.com" target="_blank">《今夕何夕》</a></li>-->
-        <!--<li><b>文章统计</b>：<a href="/time/" target="_blank">31</a>篇文章</li>-->
-        <!--<li><b>标签管理</b>：<a href="/tags.html" target="_blank">标签云</a></li>-->
-        <!--<li><b>统计数据</b>：<a href="/" target="_blank">百度统计</a></li>-->
+        <!--<li><b>主题模板</b>：<a href="http://www.yangqq.com">《今夕何夕》</a></li>-->
+        <!--<li><b>文章统计</b>：<a href="/time/">31</a>篇文章</li>-->
+        <!--<li><b>标签管理</b>：<a href="/tags.html">标签云</a></li>-->
+        <!--<li><b>统计数据</b>：<a href="/">百度统计</a></li>-->
         <!--<li><b>微信公众号</b>：扫描二维码，关注我们</li>-->
         <!--<li class="tongji_gzh"><a href='/' target=_blank><img src="__INDEX__/picture/wxgzh.jpg"></a></li>-->
         <!--</ul>-->

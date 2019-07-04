@@ -165,8 +165,6 @@ class Article extends Common
         return $this->fetch($art_template['art_template']);
     }
 
-
-
     /**
      * lee获取栏目页文章,按照发布时间排序
      */

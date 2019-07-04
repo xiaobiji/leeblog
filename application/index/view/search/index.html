@@ -1,153 +1,150 @@
-<!DOCTYPE HTML>
+﻿<!doctype html>
 <html>
 <head>
-<title>{$keyWords}-{$config.title}</title>
 <meta charset="utf-8">
-<meta name="renderer" content="webkit|ie-comp|ie-stand">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-	<meta name="keywords" content="{$keyWords}">
-	<meta name="description" content="{$keyWords}">
-<LINK rel="Bookmark" href="favicon.ico" >
-<LINK rel="Shortcut Icon" href="favicon.ico" />
-<!--[if lt IE 9]>
-<script type="text/javascript" src="__INDEX__/staticRes/js/html5shiv.js"></script>
-<script type="text/javascript" src="__INDEX__/staticRes/js/respond.min.js"></script>
+  {include file="common/tdk"}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="__INDEX__/css/base.css" rel="stylesheet">
+  <link href="__INDEX__/css/m.css" rel="stylesheet">
+  <script src="__INDEX__/js/jquery-1.8.3.min.js" ></script>
+  <script src="__INDEX__/js/comm.js"></script>
+  <!--[if lt IE 9]>
+  <script src="__INDEX__/js/modernizr.js"></script>
 <![endif]-->
-<link rel="stylesheet" type="text/css" href="__INDEX__/plugin/h-ui/css/H-ui.min.css" />
-<link rel="stylesheet" type="text/css" href="__INDEX__/plugin/Hui-iconfont/1.0.8/iconfont.min.css" />
-<link rel="stylesheet" type="text/css" href="__INDEX__/css/common.css" />
-<link rel="stylesheet" type="text/css" href="__INDEX__/plugin/pifu/pifu.css" />
-<!--[if lt IE 9]>
-<link href="__INDEX__/staticRes/lib/h-ui/css/H-ui.ie.css" rel="stylesheet" type="text/css" />
-<![endif]-->
-<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } function showSide(){$('.navbar-nav').toggle();}</script>
 </head>
 <body>
-<header class="navbar-wrapper">
-	<div class="navbar navbar-fixed-top">
-		<div class="container cl">
-			<a class="navbar-logo hidden-xs" href="index.html">
-				<img class="logo" src="__INDEX__/img/Lee_logo.jpg" alt="Lao王博客" />
-			</a>
-			<a class="logo navbar-logo-m visible-xs" href="index.html">Lao王博客</a>
-			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:void(0);" onclick="showSide();">&#xe667;</a>
-			<nav class="nav navbar-nav nav-collapse w_menu" role="navigation">
-				<ul class="cl">
-					<li class="active"> <a href="/" data-hover="首页">首页</a> </li>
-					{volist name="cate" id="vo"}
-					<li class="top_nav"> <a href="{:url('category/index',['id'=>$vo['id']])}" data-hover="{$vo.name}">{$vo.name}</a>
-						<!--<div class="child_nav">-->
-						<!--{volist name="vo.child" id="child"}-->
-						<!--<p style="border-bottom: 1px #222 solid;">-->
-						<!--<a href="{$vo.url}" data-hover="{$child.name}" style="padding: 0 30px;outline: none;color: #838383;text-decoration: none;letter-spacing: 5px;text-shadow: 0 0 1px rgba(255,255,255,0.3);font-size: 1em;">{$child.name}</a>-->
-						<!--</p>-->
-						<!--{/volist}-->
-						<!--</div>-->
-					</li>
-					{/volist}
-				</ul>
-			</nav>
-			<nav class="navbar-nav navbar-userbar hidden-xs hidden-sm " style="top: 0;">
-				<ul class="cl">
-					<li class="userInfo dropDown dropDown_hover">
-						<form action="{:url('search/index')}" method="post">
-							<input type="text" name="keywords" value="{$keyWords}" style="width: 240px;height: 39px;margin-right: 5px;font-size: 17px;">
-							<button type="submit" style="border: 0;border-radius: 50%;">
-								<img class="avatar radius" src="__INDEX__/img/search.png" alt="搜索" style="width:28px;height:28px">
-							</button>
-						</form>
-					</li>
+<!--top begin-->
+<!--top begin-->
+{include file='common/header'}
+<!--top end-->
+<article> 
+  <!--lbox begin-->
+  <div class="lbox">
 
-					<!--<li class="userInfo dropDown dropDown_hover">-->
-					<!--&lt;!&ndash;<a href="javascript:;" ><img class="avatar radius" src="__INDEX__/img/40.jpg" alt="丶似浅 "></a>-->
-					<!--<ul class="dropDown-menu menu radius box-shadow">-->
-					<!--<li><a href="/app/loginOut">退出</a></li>-->
-					<!--</ul>&ndash;&gt;-->
-					<!--<a href="/app/qq" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" ><img class="avatar size-S" src="__INDEX__/img/qq.jpg" title="登入">登入</a>-->
-					<!--</li>-->
-				</ul>
+    <div class="whitebg bloglist">
+      <h2 class="htitle">搜索结果</h2>
+      <ul>
 
-			</nav>
+        {volist name="articles" id="vo"}
+        <li>
+          <h3 class="blogtitle">{if $vo.istop}<b>【顶】</b>{/if}{if $vo.istuijian}<b style="color: blue">【荐】</b>{/if}<a href="/article/{$vo.id}.html">{$vo.title}</a></h3>
+          {if($vo.pic[0])}
+          <span class="blogpic imgscale">
+                        <i><a href="/category/{$vo.cid}.html">{$vo.cname}</a></i>
+                        <a href="/article/{$vo.id}.html" title="{$vo.title}">
+                            <img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}" alt="{$vo.title}">
+                        </a>
+                    </span>
+          {/if}
+          <p class="blogtext">{$vo.remark} </p>
+          <p class="bloginfo">
+            <!--<i class="avatar"><script src="__INDEX__/js/thea6.js"></script></i><span></span>-->
+            <span>{:date('Y-m-d',$vo.addtime)}</span><span>【<a href="/category/{$vo.cid}.html">{$vo.cname}</a>】</span></p>
+          <a href="/article/{$vo.id}.html" class="viewmore">阅读更多</a></li>
+        {/volist}
 
-		</div>
-	</div>
-</header>
-<!--导航条-->
-<nav class="breadcrumb">
-    <div class="container">
-        <i class="Hui-iconfont">&#xe67f;</i><a href="/" class="c-primary">首页</a>
-		<span class="c-gray en">&gt;</span>
-		<a href="{:url('search/index',['keywords'=>$keyWords])}" class="c-primary">搜索-{$keyWords}</a>
+      </ul>
+      <!--pagelist-->
+      <div class="pagelist">
+        {$articles->render()}
+      </div>
+      <!--pagelist end-->
+
     </div>
-</nav>
-
-<section class="container">
-  <!--left-->
-  <div class="col-sm-9 col-md-9 mt-20">
-  	<!--article list-->
-			<ul class="index_arc">
-
-				{volist name='data' id='vo'}
-				<li class="index_arc_item  {if empty($vo.thumb)}no_pic{/if}">
-					{if !empty($vo.thumb)}
-					<a href="{:url('article/index',['id'=>$vo['id']])}" class="pic">
-						<img class="lazyload" data-original="{$vo.thumb}" alt="应该选" />
-					</a>
-					{/if}
-					<h4 class="title"><a href="{:url('article/index',['id'=>$vo['id']])}">{$vo.title}</a></h4>
-					<div class="date_hits">
-						<span>{$vo.author}</span>
-						<span>{$vo.addtime}</span>
-						<span><a href="{:url('article/index',['id'=>$vo['id']])}">{$vo.title}</a></span>
-						<p class="hits"><i class="Hui-iconfont" title="点击量">&#xe6c1;</i> {$vo.click_num}° </p>
-						<p class="commonts"><i class="Hui-iconfont" title="点击量">&#xe622;</i> <span class="cy_cmt_count">{$vo.cmt_count}</span></p>
-					</div>
-					<div class="desc">{$vo.desc}</div>
-				</li>
-				{/volist}
-          
-				</ul>
-	  	{$data->render()}
-  		<!--<div class="text-c mb-20" id="moreBlog">-->
-            <!--<a class="btn  radius btn-block " href="javascript:;" onclick="moreBlog('${blogType.id}','${tag.name}');">点击加载更多</a>-->
-            <!--<a class="btn  radius btn-block hidden" href="javascript:;">加载中……</a>-->
-        <!--</div>		-->
+    <!--bloglist end--> 
   </div>
 
-	<!--right-->
-	{include file='common/right'}
-	<!--right end-->
 
-
-</section>
-<footer class="footer mt-20">
-    <div class="container-fluid" id="foot">
-        <p>Copyright &copy; 2016-2017 www.wfyvv.com <br>
-            <a href="#" target="_blank">皖ICP备17002922号</a>  更多模板：<a href="http://www.mycodes.net/" target="_blank">源码之家</a><br>
-        </p>
+  <div class="rbox">
+    <div class="card">
+      <h2>我的名片</h2>
+      <p>网名：{$config.contact_name}</p>
+      <p>职业：{$config.desc}</p>
+      <p>现居：{$config.address}</p>
+      <p>Email：{$config.email}</p>
+      <ul class="linkmore">
+        <li><a href="/" class="iconfont icon-zhuye" title="网站地址"></a></li>
+        <li><a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email={$config.email}"
+               class="iconfont icon-youxiang" title="我的邮箱"></a></li>
+        <li><a href="http://wpa.qq.com/msgrd?v=3&uin={$config.online}&site=qq&menu=yes"
+               class="iconfont icon---" title="QQ联系我"></a></li>
+        <li id="weixin"><a href="#" class="iconfont icon-weixin" title="关注我的微信"></a><i><img
+                src="/public/uploads/{$config.weixin}"></i></li>
+      </ul>
     </div>
-</footer>
-<script type="text/javascript" src="__INDEX__/plugin/jquery/1.9.1/jquery.min.js"></script>
-<script type="text/javascript" src="__INDEX__/plugin/layer/3.0/layer.js"></script>
-<script type="text/javascript" src="__INDEX__/plugin/h-ui/js/H-ui.min.js"></script>
-<script type="text/javascript" src="__INDEX__/plugin/pifu/pifu.js"></script>
-<script type="text/javascript" src="__INDEX__/js/common.js"></script>
-<script> $(function(){ $(window).on("scroll",backToTopFun); backToTopFun(); }); </script>
-<script>
-$(function(){
-//标签
-	$(".tags a").each(function(){
-		var x = 9;
-		var y = 0;
-		var rand = parseInt(Math.random() * (x - y + 1) + y);
-		$(this).addClass("tags"+rand)
-	});
-	
-	$("img.lazyload").lazyload({failurelimit : 3});
-});
+    <div class="whitebg cloud">
+      <h2 class="htitle">标签云</h2>
+      <ul>
+        {volist name="tagsData" id="vo"}
+        <a href="/search/tags/{$vo.id}.html">{$vo.tname}</a>
+        {/volist}
+      </ul>
+    </div>
+    <div class="whitebg notice">
+      <h2 class="htitle">热门文章</h2>
+      <ul>
+        {volist name="hot_articles" id="vo"}
+        <li><a href="/article/{$vo.id}.html" title="{$vo.title}">{$vo.title}</a>
+        </li>
+        {/volist}
+      </ul>
+    </div>
 
-</script> 
+    <div class="whitebg paihang">
+      <h2 class="htitle">点击排行</h2>
+      <ul>
+        {volist name="click_articles" id="vo"}
+        <li><i></i><a href="/article/{$vo.id}.html" title="{$vo.title}">{$vo.title}</a></li>
+        {/volist}
+      </ul>
+    </div>
+    <div class="whitebg tuijian">
+      <h2 class="htitle">站长推荐</h2>
+      <ul>
+        {volist name="tuijianData" id="vo"}
+        <li><a href="/article/{$vo.id}.html" title="{$vo.title}"><i><img
+                src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"></i>
+          <p>{$vo.title}</p>
+        </a></li>
+        {/volist}
+      </ul>
+    </div>
+
+
+    <div class="whitebg wenzi">
+      <h2 class="htitle">猜你喜欢</h2>
+      <ul>
+        {volist name="like_articles" id="vo"}
+        <li><a href="/article/{$vo.id}.html">{$vo.title}</a></li>
+        {/volist}
+      </ul>
+
+    </div>
+    <!--<div class="whitebg tongji">-->
+    <!--<h2 class="htitle">站点信息</h2>-->
+    <!--<ul>-->
+    <!--<li><b>建站时间</b>：2018-10-24</li>-->
+    <!--<li><b>网站程序</b>：帝国CMS7.5</li>-->
+    <!--<li><b>主题模板</b>：<a href="http://www.yangqq.com">《今夕何夕》</a></li>-->
+    <!--<li><b>文章统计</b>：<a href="/time/">31</a>篇文章</li>-->
+    <!--<li><b>标签管理</b>：<a href="/tags.html">标签云</a></li>-->
+    <!--<li><b>统计数据</b>：<a href="/">百度统计</a></li>-->
+    <!--<li><b>微信公众号</b>：扫描二维码，关注我们</li>-->
+    <!--<li class="tongji_gzh"><a href='/' target=_blank><img src="__INDEX__/picture/wxgzh.jpg"></a></li>-->
+    <!--</ul>-->
+    <!--</div>-->
+    <div class="links whitebg">
+      <h2 class="htitle">隔壁邻居</h2>
+      <ul>
+        {volist name="linksData" id="vo"}
+        <li><a href="{$vo.url}">{$vo.name}</a></li>
+        {/volist}
+      </ul>
+    </div>
+  </div>
+</article>
+<footer>
+  {include file='common/footer'}
+</footer>
 </body>
 </html>
