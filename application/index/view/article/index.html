@@ -1,0 +1,128 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+    {include file="common/tdk"}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="__INDEX__/css/base.css" rel="stylesheet">
+    <link href="__INDEX__/css/m.css" rel="stylesheet">
+    <script src="__INDEX__/js/jquery-1.8.3.min.js" ></script>
+    <script src="__INDEX__/js/comm.js"></script>
+    <!--[if lt IE 9]>
+    <script src="__INDEX__/js/modernizr.js"></script>
+<![endif]-->
+<script type="text/javascript" src="__INDEX__/js/ajax.js"></script>
+</head>
+<body>
+<!--top begin-->
+{include file='common/header'}
+<!--top end-->
+<article> 
+  <!--lbox begin-->
+  <div class="lbox">
+    <div class="content_box whitebg">
+      <h2 class="htitle">
+          <span class="con_nav">您现在的位置是：
+          <a href="/">首页</a>
+              {volist name="position" id="vo"}
+              &nbsp;>&nbsp;<a href="/category/{$vo.id}.html"><span class="c-gray">{$vo.name}</span></a>
+              {/volist}
+          </span>
+      </h2>
+      <h1 class="con_tilte">{$articleData.title}</h1>
+      <p class="bloginfo"><i class="avatar"><img src="__INDEX__/picture/avatar.jpg"></i><span>{$articleData.author}</span><span>{:date('Y-m-d',$articleData.addtime)}</span><span><a href="/category/{$articleData.cid}.html">【{$articleData.cname}】</a></span><span><script src="__INDEX__/js/8c859ecd482d4824ba4c9472a38319f9.js"></script>{$articleData.click}人已围观</span></p>
+      <p class="con_info"><b>简介</b>{$articleData.remark}</p>
+      <div class="con_text">
+          {$articleData.content}
+
+
+          {if $articleData.sourceurl}
+          <p class="share"><b>文章来源：{$articleData.source}</b><a href="{$articleData.sourceurl}" >{$articleData.sourceurl}</a></p>
+          {/if}
+          <p>Tags：{volist name="keyData" id="vo"}<a href="search.html?keyword={$vo.tname}">{$vo.tname}</a> &nbsp; {/volist}</p>
+
+        <p><span class="diggit"><a href="JavaScript:makeRequest('/e/public/digg/?classid=1&id=4&dotop=1&doajax=1&ajaxarea=diggnum','EchoReturnedText','GET','');"> 很赞哦！ </a>(<b id="diggnum"><script type="text/javascript" src="__INDEX__/js/f7e5a77015674fec9e6239cc455a0caf.js"></script></b>)</span></p>
+        <div class="nextinfo">
+            {if condition="$front"}
+            <p>上一篇：<a href="/article/{$front.id}.html">{$front['title']}</a></p>
+            {else/}
+            <p>已经是第一篇</p>
+            {/if}
+
+            {if condition="$after"}
+            <p>下一篇：<a href="/article/{$after.id}.html">{$after['title']}</a></p>
+            {else/}
+            <p>已经是最后一篇</p>
+            {/if}
+        </div>
+      </div>
+    </div>
+    <div class="whitebg">
+      <h2 class="htitle">相关文章</h2>
+      <ul class="otherlink">
+
+          {volist name='xiangguanData' id='vo'}
+          <li><a href="/article/{$vo.id}.html" title="{$vo.title}" >{$vo.title}</a></li>
+          {/volist}
+      </ul>
+    </div>
+    <div class="whitebg">
+      <h2 class="htitle">随便看看</h2>
+      <ul class="xiangsi">
+          {volist name='suijiData' id='vo'}
+        <li><a href="/article/{$vo.id}.html" ><i><img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"></i>
+          <p>{$vo.title}</p>
+          <span>{$vo.remark}</span></a></li>
+          {/volist}
+     </ul>
+    </div>
+
+<div class="whitebg gbook">
+      <h2 class="htitle">文章评论</h2>
+      <ul>
+<script src="__INDEX__/js/567fecbc7ea64816bceeba99d599b530.js"></script>
+<script>
+          function CheckPl(obj)
+          {
+          if(obj.saytext.value=="")
+          {
+          alert("您没什么话要说吗？");
+          obj.saytext.focus();
+          return false;
+          }
+          return true;
+          }
+          </script>
+<form action="/e/pl/doaction.php" method="post" name="saypl" id="saypl" onsubmit="return CheckPl(document.saypl)">
+  <div id="plpost">
+    <p class="saying"><span><a href="/e/pl/?classid=1&amp;id=4">共有<script type="text/javascript" src="__INDEX__/js/40d2512ea3114dcf856e501ad560477f.js"></script>条评论</a></span>来说两句吧...</p>
+    <p class="yname"><span>用户名:</span>
+      <input name="username" type="text" class="inputText" id="username" value="" size="16" />
+    </p>
+    <p class="yzm"><span>验证码:</span>
+      <input name="key" type="text" class="inputText" size="16" />
+      <img src="__INDEX__/picture/7bb22a0584f146f781876cf480e38a99.gif" align="absmiddle" name="plKeyImg" id="plKeyImg" onclick="plKeyImg.src='/e/ShowKey/?v=pl&t='+Math.random()" title="看不清楚,点击刷新" /> </p>
+    <input name="nomember"  type="hidden" id="nomember" value="1" checked="checked" />
+    <textarea name="saytext" rows="6" id="saytext"></textarea>
+    <input name="imageField" type="submit" value="提交"/>
+    <input name="id" type="hidden" id="id" value="4" />
+    <input name="classid" type="hidden" id="classid" value="1" />
+    <input name="enews" type="hidden" id="enews" value="AddPl" />
+    <input name="repid" type="hidden" id="repid" value="0" />
+    <input type="hidden" name="ecmsfrom" value="/blog/4.html">
+    </td>
+  </div>
+</form>
+      </ul>
+    </div>
+  </div>
+  <!--lbox end-->
+  <div class="rbox">
+      {include file='common/right'}
+  </div>
+</article>
+<footer>
+    {include file='common/footer'}
+</footer>
+<script src="__INDEX__/js/6e4a14d390e540658ab43ca290e97a4a.js"></script></body>
+</html>
