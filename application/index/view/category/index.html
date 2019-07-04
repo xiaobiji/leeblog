@@ -1,0 +1,74 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+  {include file="common/tdk"}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="__INDEX__/css/base.css" rel="stylesheet">
+<link href="__INDEX__/css/m.css" rel="stylesheet">
+<script src="__INDEX__/js/jquery-1.8.3.min.js" ></script>
+<script src="__INDEX__/js/comm.js"></script>
+<!--[if lt IE 9]>
+<script src="__INDEX__/js/modernizr.js"></script>
+<![endif]-->
+</head>
+<body>
+
+<!--top begin-->
+<!--top begin-->
+{include file='common/header'}
+<!--top end-->
+<article> 
+  <!--lbox begin-->
+  <div class="lbox">
+    <div class="whitebg lanmu"> <img src="{if($cateData.pic)}/public/{$cateData.pic}{else/}__INDEX__/picture/noimg.jpg{/if}">
+      <h1>{$cateData.name}</h1>
+      <p>{$cateData.remark}</p>
+    </div>
+    <div class="whitebg bloglist">
+      <h2 class="htitle">最新博文</h2>
+      <ul>
+
+
+        {volist name="articles" id="vo"}
+        <li>
+          <h3 class="blogtitle">{if $vo.istop}<b>【顶】</b>{/if}{if $vo.istuijian}<b style="color: blue">【荐】</b>{/if}<a href="/article/{$vo.id}.html" target="_blank">{$vo.title}</a></h3>
+          {if($vo.pic[0])}
+          <span class="blogpic imgscale">
+                        <i><a href="/category/{$vo.cid}.html" target="_blank">{$vo.cname}</a></i>
+                        <a href="/article/{$vo.id}.html" title="{$vo.title}">
+                            <img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}" alt="{$vo.title}">
+                        </a>
+                    </span>
+          {/if}
+          <p class="blogtext">{$vo.remark} </p>
+          <p class="bloginfo">
+            <!--<i class="avatar"><script src="__INDEX__/js/thea6.js"></script></i><span></span>-->
+            <span>{:date('Y-m-d',$vo.addtime)}</span><span>【<a href="/category/{$vo.cid}.html" target="_blank">{$vo.cname}</a>】</span></p>
+          <a href="/article/{$vo.id}.html" class="viewmore">阅读更多</a></li>
+        {/volist}
+
+
+      </ul>
+      <!--pagelist-->
+      <div class="pagelist">
+        {$articles->render()}
+      </div>
+      <!--pagelist end--> 
+    </div>
+    <!--bloglist end--> 
+  </div>
+  <div class="rbox">
+
+    {include file='common/right'}
+
+
+
+  </div>
+</article>
+<footer>
+
+  {include file='common/footer'}
+</footer>
+</body>
+</html>
