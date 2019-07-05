@@ -24,8 +24,9 @@ class Article extends Common
             ->join('category b','b.id=a.cid','LEFT')
             ->join('pics c','c.aid=a.id','LEFT')
             ->join('click k','k.aid=a.id','LEFT')
+            ->join('articlelike l','l.aid=a.id','LEFT')
             ->where('a.id',$id)
-            ->field('count(k.aid) as click,a.id,a.cid,a.title,a.content,a.desc,a.source,a.sourceurl,a.remark,a.author,a.addtime,a.cmt_count,a.keyword,a.desc,b.name as cname,b.mark,GROUP_CONCAT(c.pic) as pic')
+            ->field('count(l.aid) as likenum,count(k.aid) as click,a.id,a.cid,a.title,a.content,a.desc,a.source,a.sourceurl,a.remark,a.author,a.addtime,a.cmt_count,a.keyword,a.desc,b.name as cname,b.mark,GROUP_CONCAT(c.pic) as pic')
             ->find();
 
         if(!$articleData['cid'] ||!$articleData['cname'] ){
@@ -174,13 +175,14 @@ class Article extends Common
                 $uname = session('username');
                 $likeip =  $likeData = Db::name('articlelike')
                     ->where('ip',$ip)
+                    ->where('aid',$aid)
                     ->field('id,uname,ip')
                     ->find();
                 $likeuname = Db::name('articlelike')
                     ->where('uname',$uname)
+                    ->where('aid',$aid)
                     ->field('id,uname,ip')
                     ->find();
-
                 if($likeuname['id']){
                     Db::name('articlelike')->where('id',$likeuname['id'])->update(['ip'=>$likeuname['ip']]);
                     return $this->json(202,'','已经点赞');
@@ -195,6 +197,7 @@ class Article extends Common
                 $data['like_time']= time();
                 $res = Db::name('articlelike')->insert($data);
                 if($res){
+
                     return $this->json(201,'','点赞成功');
                 }else{
                     return $this->json(204,'','点赞失败');

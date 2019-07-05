@@ -46,8 +46,34 @@
                 <a href="javascript:;" onclick="articlelike({$articleData.id})">
                     很赞哦！
                 </a>
-                (<b id="diggnum"><script type="text/javascript" src="__INDEX__/js/f7e5a77015674fec9e6239cc455a0caf.js"></script></b>)
+
+                (<b id="diggnum">{$articleData.likenum}</b>)
+
             </span>
+            <script type="text/javascript">
+
+                function articlelike($aid) {
+                    var aid = $aid;
+                    var diggnum = $('#diggnum').val();
+                    $.ajax({
+                        type: "post",
+                        url: '/index/article/like',
+                        data: {
+                            aid:aid
+                        },
+                        dataType: "json",
+                        success: function(result){
+                            var data = result;
+                            if(data.code==201){
+                                $('#diggnum').html(diggnum+1);
+                                return false;
+                            }else{
+                                return false;
+                            }
+                        }
+                    });
+                }
+            </script>
         </p>
         <div class="nextinfo">
             {if condition="$front"}
