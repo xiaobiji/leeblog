@@ -348,7 +348,7 @@ class Comments extends Common
             if(input('post.')['reply']){
                 $seach_id = 'reply_id';
                 $seach_table = 'comments_reply';
-                $seach_moble = 'Comments_reply';
+                $seach_moble = 'comments_reply';
             }else{
                 $seach_id = 'com_id';
                 $seach_table = 'comments';
