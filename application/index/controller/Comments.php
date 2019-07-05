@@ -204,7 +204,7 @@ class Comments extends Common
             if($reply_id){
                 //插入回复表表 回复次数 +1
                 $r_data['reply_num']=  $res['reply_num']+1;//'回复目标id，reply_type为1时，是comment_id，reply_type为2时为回复表的id',
-                $result= model('Comments_reply')->allowField(true)->save($r_data,['id' => $reply_id]);
+                $result= model('comments_reply')->allowField(true)->save($r_data,['id' => $reply_id]);
                 if(!$result){
                     $this->error('被回复次数更新失败');
                 }
