@@ -193,7 +193,7 @@ class Comments extends Common
 //            if(!$validate->check($data)){
 //                $this->error($validate->getError());
 //            }
-            $result=model('CommentsReply')->allowField(true)->save($data);
+            $result=model('comments_reply')->allowField(true)->save($data);
 
 //            Lang::set('Content addition success','回答成功','zh-cn');
 //            Lang::set('Content addition failure','回答失败','zh-cn');
