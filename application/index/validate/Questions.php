@@ -13,13 +13,17 @@ use think\Validate;
 
 class Questions extends Validate
 {
+
+
     protected $rule =   [
+
         'title'  => 'require',
+
         '__token__'  =>  'require|token',
     ];
 
     protected $message  =   [
-        'title.require' => '{%请提出问题}',
+        'title.require' => '{%请输入标题}',
         '__token__.require'=>"非法提交",
         '__token__.token'=>"请不要重复提交表单",
     ];

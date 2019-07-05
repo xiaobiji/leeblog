@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="__INDEX__/css/base.css" rel="stylesheet">
     <link href="__INDEX__/css/m.css" rel="stylesheet">
+    <link href="__INDEX__/css/bootstrap.css" rel="stylesheet">
     <script src="__INDEX__/js/jquery-1.8.3.min.js" ></script>
     <script src="__INDEX__/js/comm.js"></script>
     <!--[if lt IE 9]>
@@ -113,39 +114,109 @@
 <div class="whitebg gbook">
       <h2 class="htitle">文章评论</h2>
       <ul>
-<script src="__INDEX__/js/567fecbc7ea64816bceeba99d599b530.js"></script>
+<!--<script src="__INDEX__/js/567fecbc7ea64816bceeba99d599b530.js"></script>-->
+          {volist name="comment" id="vo"}
+          <div class="fb">
+              <ul><p class="fbtime"><span>{$vo.create_time|date="Y-m-d H:i:s",###}<a href="#plpost" onclick="commentsid({$vo.id})" style="font-size:12px;display: block;background: #040404;color: #fff;border: 0;line-height: 20px;padding: 0 5px;margin-left:5px;border-radius: 5px;float: right;"> 回复 </a></span> {$vo.answerer}</p>
+                      <p id="comments_{$vo.id}" class="fbinfo">{$vo.content}</p>
+                  {if $vo.com_reply}
+                  {volist name='vo.com_reply' id="co" }
+                  <p></p>
+                  <div class="ecomment">
+                      <span class="ecommentauthor">{$co.from_user}回复{$co.to_user}：<span class="ecommentauthor" style="float: right;font-size: 12px">{$co.create_time|date="Y-m-d H:i:s",###} <a href="#plpost" onclick="comments_reply_id({$co.id})" style="font-size:12px;display: block;background: #040404;color: #fff;border: 0;line-height: 20px;padding: 0 5px;margin-left:5px;border-radius: 5px;float: right;"> 回复 </a></span></span>
+                      <p id="comments_reply_{$vo.id}" class="ecommenttext"> {$co.content}</p>
+                  </div>
+                  {if $co.reply_coments}
+                  {$co.reply_coments}
+                  {/if}
+                  {/volist}
+                  {/if}
+
+                  <p></p>
+              </ul>
+          </div>
+          {/volist}
 <script>
           function CheckPl(obj)
           {
-          if(obj.saytext.value=="")
-          {
-          alert("您没什么话要说吗？");
-          obj.saytext.focus();
-          return false;
-          }
-          return true;
-          }
+
+              if(obj.uname.value=="")
+              {
+                  alert("请输入用户名");
+                  obj.uname.focus();
+                  return false;
+              }
+              if(obj.email.value=="")
+              {
+                  alert("请输入邮箱");
+                  obj.email.focus();
+                  return false;
+              }else{
+                  var reg = new RegExp("^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$"); //正则表达式
+                  var email = document.getElementById("email"); //要验证的对象
+                  if(!reg.test(email.value)){ //正则验证不通过，格式不对
+                      alert("请输入正确邮箱格式!");
+                      return false;
+                  }
+              }
+              if(obj.code.value=="")
+              {
+                  alert("请输入验证码");
+                  obj.code.focus();
+                  return false;
+              }
+              if(obj.content.value=="")
+              {
+              alert("您没什么话要说吗？");
+              obj.content.focus();
+              return false;
+              }
+              return true;
+              }
           </script>
-<form action="/e/pl/doaction.php" method="post" name="saypl" id="saypl" onsubmit="return CheckPl(document.saypl)">
-  <div id="plpost">
-    <p class="saying"><span><a href="/e/pl/?classid=1&amp;id=4">共有<script type="text/javascript" src="__INDEX__/js/40d2512ea3114dcf856e501ad560477f.js"></script>条评论</a></span>来说两句吧...</p>
-    <p class="yname"><span>用户名:</span>
-      <input name="username" type="text" class="inputText" id="username" value="" size="16" />
-    </p>
-    <p class="yzm"><span>验证码:</span>
-      <input name="key" type="text" class="inputText" size="16" />
-      <img src="__INDEX__/picture/7bb22a0584f146f781876cf480e38a99.gif" align="absmiddle" name="plKeyImg" id="plKeyImg" onclick="plKeyImg.src='/e/ShowKey/?v=pl&t='+Math.random()" title="看不清楚,点击刷新" /> </p>
-    <input name="nomember"  type="hidden" id="nomember" value="1" checked="checked" />
-    <textarea name="saytext" rows="6" id="saytext"></textarea>
-    <input name="imageField" type="submit" value="提交"/>
-    <input name="id" type="hidden" id="id" value="4" />
-    <input name="classid" type="hidden" id="classid" value="1" />
-    <input name="enews" type="hidden" id="enews" value="AddPl" />
-    <input name="repid" type="hidden" id="repid" value="0" />
-    <input type="hidden" name="ecmsfrom" value="/blog/4.html">
-    </td>
-  </div>
-</form>
+
+          <form class="form-horizontal"  action="/index/comments/reply.html" method="post"  onsubmit="return CheckPl(document.saypl)">
+              <div id="plpost">
+                  <p class="saying"><span><a href="javascript:;">共有{$articleData.reply_num}条回复</a></span></p>
+                  <h1 id='com_note' class="lead">来个评论吧！</h1>
+                  <input name="aid" type="hidden" id="aid" value="{$articleData.id}" />
+                  <input name="comments_id" type="hidden" id="comments_id" value="" />
+                  <input name="comments_reply_id" type="hidden" id="comments_reply_id" value="" />
+                  <input type="hidden" name="ecmsfrom" value="/article/{$articleData.id}.html">
+              <div class="form-group">
+                  <label for="exampleInputName2" class="col-sm-2 control-label">用户名</label>
+                  <div class="col-sm-4">
+                      <input name="uname" type="text" class="form-control"  id="uname"  placeholder="请输入用户名"  required="required">
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">邮箱</label>
+                  <div class="col-sm-4">
+                      <input  name="email" type="email" class="form-control" id="email" placeholder="Email"  required="required">
+                  </div>
+              </div>
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">验证码</label>
+                  <div class="col-sm-4">
+                      <input type="text" class="form-control" name="code" placeholder="请输入验证码" required="required">
+                  </div>
+                  <img src="/captcha?rand="+Math.random() align="absmiddle" id="plKeyImg" onclick="this.src='{:captcha_src()}?'+Math.random();" title="看不清楚,点击刷新" style="height: 40px;cursor:pointer;"/>
+              </div>
+
+              <div class="form-group">
+                  <label class="col-sm-2 control-label">说点什么</label>
+                  <div class="col-sm-10">
+                      <textarea name="content"  id="saytext" class="form-control" rows="3"></textarea>
+                  </div>
+              </div>
+
+              <div class="form-group">
+                  <div class="col-sm-offset-2 col-sm-10">
+                      <button type="submit" class="btn btn-primary">提交</button>
+                  </div>
+              </div>
+              </div>
+          </form>
       </ul>
     </div>
   </div>
@@ -158,4 +229,30 @@
     {include file='common/footer'}
 </footer>
 <script src="__INDEX__/js/6e4a14d390e540658ab43ca290e97a4a.js"></script></body>
+
+<script>
+    function commentsid($id) {
+        var id = $id;
+        if(id){
+            var a = $('#comments_'+id).html();
+            document.getElementById('comments_reply_id').value='';
+            $('#comments_id').val(id);
+            $('#com_note').html('将要回复：'+a);
+            return false;
+        }
+    }
+    function comments_reply_id($id) {
+        var id = $id;
+        if(id){
+            var a = $('#comments_reply_'+id).html();
+            document.getElementById('comments_id').value='';
+            $('#comments_reply_id').val(id);
+            $('#com_note').html('将要回复：'+a);
+            return false;
+
+        }
+    }
+</script>
+
+
 </html>

@@ -13,7 +13,17 @@ use App\Models\CommentsReply;
 class Comments extends Common
 {
     //内容列表
-    public function index(){
+    public function index($aid){
+        //获取产品介绍列表信息
+        $res=db('article')
+            ->where('id',$aid)
+            ->field('title')
+            ->find();
+        $this->show($aid);
+        return view();
+    }
+    /**原咨询问题列表，现在已不需要问题
+    public function index($aid){
         //获取产品介绍列表信息
         $res=db('questions')
             ->alias('q')
@@ -24,13 +34,14 @@ class Comments extends Common
             ->paginate(12,false);
         $this->assign('list',$res);
         return view('questions_list');
-    }
+    }*/
 
     //内容添加
     public function add(){
         if(request()->isPost()){
             $data=input('post.');
             $data['add_time']=  time();
+
             $data['uid']=$this->user_id;
             //后端数据验证
             $validate=validate('Questions');
@@ -50,7 +61,8 @@ class Comments extends Common
         return view('questions_add');
     }
     //问题回答
-    public function reply($id){
+    public function reply(){
+        /**原提出问题进行回答，管理问题表  不使用
             $res=db('questions')
                 ->alias('q')
                 ->JOIN('manager m','m.id=q.uid','left')
@@ -58,45 +70,64 @@ class Comments extends Common
                 ->where('q.qid',$id)
                 ->field('q.*,m.account questioner,n.account answerer')
                 ->find();
+         **/
             if(request()->isPost()){
                 $data=input('post.');
-                $data['topic_id']=  $id;
-                $data['from_uid']=  $this->user_id;
-                $data['nickname']=  $this->user_name;
-                $data['thumb_img']=  '空';
-                $data['status']=  1;
-                $data['create_time']=  time();
+
+
                 //后端数据验证
                 $validate=validate('Reply');
                 if(!$validate->check($data)){
                     $this->error($validate->getError());
+                };
+                $aid = $data['aid'];
+                if($data['comments_id'] && !$data['comments_reply_id']){
+                    $this->com_reply($data['comments_id'],'',$aid);
+                }else if(!$data['comments_id'] && $data['comments_reply_id']){
+                    $this->com_reply('',$data['comments_reply_id'],$aid);
+                }elseif($data['comments_id'] && $data['comments_reply_id']){
+                    $this->error('评论主题不明确');
                 }
 
+                //将评论人员信息插入 会员表
+                $member_data['username']=$data['uname'];
+                $member_data['email']=$data['email'];
+                $member_data['ip_address']=$this->getip();
+                Db::name('member')->insert($member_data);
+                //获取刚刚插入会员表的会员id
+                $userId = Db::name('member')->getLastInsID();
+
+
+                $data['topic_id']=  $aid;
+                $data['from_uid']=  $userId;
+                $data['nickname']=  $data['uname'];
+                $data['thumb_img']=  '空';
+                $data['status']=  1;
+                $data['create_time']=  time();
                 $result=model('Comments')->allowField(true)->save($data);
                 Lang::set('Content addition success','回答成功','zh-cn');
                 Lang::set('Content addition failure','回答失败','zh-cn');
                 if(!$result){
                     $this->error(lang('Content addition failure'));
                 }
-
                 //更新评论次数
-                $old_reply_num=db('questions')
-                    ->where('qid',$id)
-                    ->field('qid,reply_num')
+                $old_reply_num=db('article')
+                    ->where('id',$aid)
+                    ->field('id,reply_num')
                     ->find();
                 $q_data = [
                     'is_reply'  =>1,
                     'reply_num' => $old_reply_num['reply_num']+1
                 ];
-                $result = model('Questions')->allowField(true)->save($q_data,['qid' => $id]);
+                Db::name('article')->where('id',$aid)->update($q_data);
                 if(!$result){
                     $this->error('评论次数更新失败');
                 }
-                $this->success('回答主题成功',url('show',['id'=>$id]));
+                $this->success('评论成功');
                 return;
             }
-        $this->assign('show_data',$res);
-        return view('questions_reply');
+//        $this->assign('show_data',$res);
+//        return view('article/index.html');
     }
 
 
@@ -104,7 +135,7 @@ class Comments extends Common
 
 
     //回复第一次评论
-    public function com_reply($id='',$reply_id=''){
+    public function com_reply($id='',$reply_id='',$aid=''){
 
         if($reply_id){
             $from_table = 'comments_reply';
@@ -116,15 +147,24 @@ class Comments extends Common
             $comment_id = 'topic_id';
             $nickname = 'nickname';
         }
+
+        if(request()->isPost()){
+            $data=input('post.');
+
+            //将评论人员信息插入 会员表
+            $member_data['username']=$data['uname'];
+            $member_data['email']=$data['email'];
+            $member_data['ip_address']=$this->getip();
+            Db::name('member')->insert($member_data);
+            //获取刚刚插入会员表的会员id
+            $userId = Db::name('member')->getLastInsID();
+            //获取刚刚插入会员表的会员id
             $res=db($from_table)
                 ->alias('c')
-                ->JOIN('manager m','m.id=c.from_uid','left')
+                ->JOIN('member m','m.id=c.from_uid','left')
                 ->where('c.id',$id)
-                ->field('c.*,m.account answerer')
+                ->field('c.*,m.username answerer')
                 ->find();
-        if(request()->isPost()){
-
-            $data=input('post.');
 
 
             if($reply_id){
@@ -136,21 +176,23 @@ class Comments extends Common
                 $data['reply_type']=  1;//'1为回复评论，2为回复别人的回复',
                 $data['reply_id']=  $id;//'回复目标id，reply_type为1时，是comment_id，reply_type为2时为回复表的id',
             }
+
+
             $data['comment_id']=  $res[$comment_id];
             $data['to_uid']=  $res['from_uid'];
-            $data['from_uid']=  $this->user_id;
-            $data['from_nickname']=  $this->user_name;
+            $data['from_uid']=  $userId;
+            $data['from_nickname']=  $data['uname'];
             $data['from_thumb_img']=  '空';
             $data['to_nickname']=  $res[$nickname];
 
             $data['is_author']= 0;//'0为普通回复，1为后台管理员回复',
 
             $data['create_time']=  time();
-            //后端数据验证
-            $validate=validate('Reply');
-            if(!$validate->check($data)){
-                $this->error($validate->getError());
-            }
+//            //后端数据验证
+//            $validate=validate('Reply');
+//            if(!$validate->check($data)){
+//                $this->error($validate->getError());
+//            }
             $result=model('CommentsReply')->allowField(true)->save($data);
 
 //            Lang::set('Content addition success','回答成功','zh-cn');
@@ -168,17 +210,17 @@ class Comments extends Common
                 }
             }
             //插入问题表 回复次数 +1
-            $old_reply_num=db('questions')
-                ->where('qid',$res[$comment_id])
-                ->field('qid,reply_num')
+            $old_reply_num=db('article')
+                ->where('id',$aid)
+                ->field('id,reply_num')
                 ->find();
             $q_data = [
                 'is_reply'  =>1,
                 'reply_num' => $old_reply_num['reply_num']+1
             ];
-            $result=model('Questions')->allowField(true)->save($q_data,['qid' => $res[$comment_id]]);
+            $result=Db::name('article')->where('id',$aid)->update($q_data);
             if(!$result){
-                $this->error('主题回复次数更新失败');
+                $this->error('文章回复次数更新失败');
             }
             //插入评论表 回复次数 +1
             $old_com_reply_num=db('comments')
@@ -192,10 +234,10 @@ class Comments extends Common
             if(!$result){
                 $this->error('评论回复次数更新失败');
             }
-            $this->success('回答问题成功',url('show',['id'=>$res[$comment_id]]));
+            $this->success('回复成功');
             return;
         }
-        $this->assign('show_data',$res);
+//        $this->assign('show_data',$res);
         return view('comments_reply');
     }
 
@@ -203,20 +245,20 @@ class Comments extends Common
 
     //内容查看
     public function show($id){
-        $res=db('questions')
-            ->alias('q')
-            ->JOIN('manager m','m.id=q.uid','left')
-            ->where('q.qid',$id)
-            ->field('q.*,m.account questioner')
-            ->find();
+//        $res=db('questions')
+//            ->alias('q')
+//            ->JOIN('member m','m.id=q.uid','left')
+//            ->where('q.qid',$id)
+//            ->field('q.*,m.account questioner')
+//            ->find();
 
         $comment=db('comments')
             ->alias('c')
-            ->JOIN('manager m','m.id=c.from_uid','left')
+            ->JOIN('member m','m.id=c.from_uid','left')
             ->where('c.topic_id',$id)
-            ->field('c.*,m.account answerer')
+            ->field('c.*,m.username answerer')
             ->order('c.create_time','desc')
-            ->paginate(4,false)
+            ->paginate(8,false)
             ->each(function($item, $key){
                 $like_id = db('like')
                     ->where(['com_id'=>$item['id'],'uid'=>$this->user_id])
@@ -229,10 +271,10 @@ class Comments extends Common
                 }
                 $reply=db('comments_reply')
                     ->alias('c')
-                    ->JOIN('manager m','m.id=c.from_uid','left')
-                    ->JOIN('manager n','n.id=c.to_uid','left')
+                    ->JOIN('member m','m.id=c.from_uid','left')
+                    ->JOIN('member n','n.id=c.to_uid','left')
                     ->where(['c.reply_type'=>1,'c.reply_id'=>$item['id']])
-                    ->field('c.*,m.account from_user,n.account to_user')
+                    ->field('c.*,m.username from_user,n.username to_user')
                     ->order('c.create_time','desc')
                     ->select();
                 foreach ($reply as $k=>$v){
@@ -253,7 +295,7 @@ class Comments extends Common
                 return $item;
             });
 
-        $this->assign('show_data',$res);
+//        $this->assign('show_data',$res);
         $this->assign('comment',$comment);
         $this->assign('floor',count($comment));
         return view('questions_show');
@@ -265,10 +307,10 @@ class Comments extends Common
     public function get_reply($comment_id,$from_id){
         $reply=db('comments_reply')
             ->alias('c')
-            ->JOIN('manager m','m.id=c.from_uid','left')
-            ->JOIN('manager n','n.id=c.to_uid','left')
+            ->JOIN('member m','m.id=c.from_uid','left')
+            ->JOIN('member n','n.id=c.to_uid','left')
             ->where(['c.reply_type'=>2,'c.reply_id'=>$from_id,'c.comment_id'=>$comment_id])
-            ->field('c.*,m.account from_user,n.account to_user')
+            ->field('c.*,m.username from_user,n.username to_user')
             ->order('c.create_time','desc')
             ->select();
         $html='';
@@ -285,17 +327,10 @@ class Comments extends Common
                     $reply[$k]['is_like']='';
                     $like_style = '';
                 }
-                $html .="<tr>";
-                $html .="<td></td> ";
-                $html .="<td>评论回复：".$v['from_user']."回复".$v['to_user']."</td>";
-                $html .="<td>".$v['content']."</td>";
-                $html .="<td>".date('Y/m/d H:i:s',$v['create_time'])."</td>";
-                $html .="<td>".$v['reply_num']."</td>";
-                $html .="<td>";
-                $html .="<a href='/admin/questions/com_reply/reply_id/".$v['id'].".html' class='layui-btn layui-btn-mini'><i class='layui-icon'>&#xe642;</i>评论</a>";
-                $html .="<i class='layui-icon layui-icon-praise' id='reply_praise-".$v['id']."'' style='".$like_style."' onclick='reply_like(".$v['id'].")'>&#xe6c6;<span id='reply_like_".$v['id']."'>".$v['like_num']."</span></i>";
-                $html .="</td>";
-                $html .="</tr>";
+                $html .="<div class='ecomment'>";
+                $html .="<span class='ecommentauthor'>".$v['from_user']."回复".$v['to_user']."：<span class='ecommentauthor' style='float: right;font-size: 12px'>".date('Y-m-d H:i:s',$v['create_time'])."</span></span>";
+                $html .="<p class='ecommenttext'>".$v['content']."</p>";
+                $html .="</div>";
 
                 $html .= $this->get_reply($v['comment_id'],$v['id']);
 

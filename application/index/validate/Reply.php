@@ -14,14 +14,21 @@ use think\Validate;
 class Reply extends Validate
 {
     protected $rule =   [
+        'uname'  => 'require',
+        'email'  => 'require',
+        'code'  =>'require|captcha',
         'content'  => 'require',
-        '__token__'  =>  'require|token',
     ];
 
     protected $message  =   [
+        'uname.require' => '{%请输入用户名}',
+        'email.require' => '{%请输入邮箱地址}',
+        'code.require'  =>'验证码不能为空',
+        'code.captcha' =>'验证码输入不正确',
         'content.require' => '{%请输入回答内容}',
-        '__token__.require'=>"非法提交",
-        '__token__.token'=>"请不要重复提交表单",
+    ];
+    protected $scene = [
+        'add'   =>['code'],
     ];
     /**
      * @param $value 要验证字段的值

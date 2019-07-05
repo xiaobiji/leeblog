@@ -26,7 +26,7 @@ class Article extends Common
             ->join('click k','k.aid=a.id','LEFT')
             ->join('articlelike l','l.aid=a.id','LEFT')
             ->where('a.id',$id)
-            ->field('count(l.aid) as likenum,count(k.aid) as click,a.id,a.cid,a.title,a.content,a.desc,a.source,a.sourceurl,a.remark,a.author,a.addtime,a.cmt_count,a.keyword,a.desc,b.name as cname,b.mark,GROUP_CONCAT(c.pic) as pic')
+            ->field('count(l.aid) as likenum,count(k.aid) as click,a.id,a.cid,a.title,a.content,a.desc,a.source,a.sourceurl,a.remark,a.author,a.addtime,a.reply_num,a.keyword,a.desc,b.name as cname,b.mark,GROUP_CONCAT(c.pic) as pic')
             ->find();
 
         if(!$articleData['cid'] ||!$articleData['cname'] ){
@@ -162,7 +162,7 @@ class Article extends Common
             'seo'=>$seo
         ]);
 
-        $this->show(4);
+        $this->show($id);
         return $this->fetch($art_template['art_template']);
     }
 
@@ -316,23 +316,30 @@ class Article extends Common
                     $like_style = '';
                 }
 
-                $html .="<div class='item cl'> <a href='#'><i class='avatar size-L radius'><img alt='' src='http://qzapp.qlogo.cn/qzapp/101388738/696C8A17B3383B88804BA92ECBAA5D81/100'></i></a>";
-                $html .="<div class='comment-main'>";
-                $html .="<header class='comment-header'>";
-                $html .="<div class='comment-meta'><a class='comment-author' href='#'>".$v['from_user']."回复".$v['to_user']."</a>";
-                $html .="<a href='javascript:;' onclick='reply_like(".$v['id'].")' class='f-r' style='font-size: 20px;".$like_style."; line-height: 18px;'><i class='Hui-iconfont Hui-iconfont-zan2'></i>".$v['like_num']."</a>";
-                $html .="<time title='".date('Y年m月d日 H:i:s',$v['create_time'])."' datetime='".date('Y-m-dTH:i:s',$v['create_time'])."' style='margin-right:10px' class='f-r'>".date('Y-m-d H:i:s',$v['create_time'])."</time>";
-                $html .="</div>";
-                $html .="</header>";
-                $html .="<div class='comment-body'>";
-                $html .="<p>".$v['content']."</p>";
-                $html .="<a onclick='reply(".$v['id'].")' class='btn size-MINI btn-primary radius' style='float: right;'>回复</a>";
-                $html .="<a onclick='modaldemo(".$v['id'].")' class='btn size-MINI btn-primary radius' style='float: right;'>回复</a>";
-                $html .="</div>";
-                $html .="</div>";
-                $html .="</div>";
-                $html .= $this->get_reply($v['comment_id'],$v['id']);
+//                $html .="<div class='item cl'> <a href='#'><i class='avatar size-L radius'><img alt='' src='http://qzapp.qlogo.cn/qzapp/101388738/696C8A17B3383B88804BA92ECBAA5D81/100'></i></a>";
+//                $html .="<div class='comment-main'>";
+//                $html .="<header class='comment-header'>";
+//                $html .="<div class='comment-meta'><a class='comment-author' href='#'>".$v['from_user']."回复".$v['to_user']."</a>";
+//                $html .="<a href='javascript:;' onclick='reply_like(".$v['id'].")' class='f-r' style='font-size: 20px;".$like_style."; line-height: 18px;'><i class='Hui-iconfont Hui-iconfont-zan2'></i>".$v['like_num']."</a>";
+//                $html .="<time title='".date('Y年m月d日 H:i:s',$v['create_time'])."' datetime='".date('Y-m-dTH:i:s',$v['create_time'])."' style='margin-right:10px' class='f-r'>".date('Y-m-d H:i:s',$v['create_time'])."</time>";
+//                $html .="</div>";
+//                $html .="</header>";
+//                $html .="<div class='comment-body'>";
+//                $html .="<p>".$v['content']."</p>";
+//                $html .="<a onclick='reply(".$v['id'].")' class='btn size-MINI btn-primary radius' style='float: right;'>回复</a>";
+//                $html .="<a onclick='modaldemo(".$v['id'].")' class='btn size-MINI btn-primary radius' style='float: right;'>回复</a>";
+//                $html .="</div>";
+//                $html .="</div>";
+//                $html .="</div>";
 
+                $html .="<div class='ecomment'>";
+                $html .="<span class='ecommentauthor'>".$v['from_user']."回复".$v['to_user']."：<span class='ecommentauthor' style='float: right;font-size: 12px'>".date('Y-m-d H:i:s',$v['create_time'])."<a href='#plpost' onclick='comments_reply_id(".$v['id'].")' style='font-size:12px;display: block;background: #040404;color: #fff;border: 0;line-height: 20px;padding: 0 5px;margin-left:5px;border-radius: 5px;float: right;'>回复 </a></span></span>";
+                $html .="<p  id='comments_reply_".$v['id']."' class='ecommenttext'>".$v['content']."</p>";
+                $html .="</div>";
+
+
+
+                $html .= $this->get_reply($v['comment_id'],$v['id']);
             }
         }
         return $html ? $html : $html ;
@@ -341,20 +348,21 @@ class Article extends Common
 
     //内容查看
     public function show($id){
-        $res=db('questions')
-            ->alias('q')
-            ->JOIN('member m','m.id=q.uid','left')
-            ->where('q.qid',$id)
-            ->field('q.*,m.username questioner')
-            ->find();
+//        $res=db('questions')
+//            ->alias('q')
+//            ->JOIN('member m','m.id=q.uid','left')
+//            ->where('q.qid',$id)
+//            ->field('q.*,m.username questioner')
+//            ->find();
 
         $comment=db('comments')
             ->alias('c')
             ->JOIN('member m','m.id=c.from_uid','left')
             ->where('c.topic_id',$id)
             ->field('c.*,m.username answerer')
+//            ->field('c.*,c.nickname as answerer')
             ->order('c.create_time','desc')
-            ->paginate(4,false)
+            ->paginate(8,false)
             ->each(function($item, $key){
                 $like_id = db('like')
                     ->where(['com_id'=>$item['id'],'uid'=>$this->user_id])
@@ -390,7 +398,7 @@ class Article extends Common
                 $item['com_reply']=$reply;
                 return $item;
             });
-        $this->assign('show_data',$res);
+//        $this->assign('show_data',$res);
         $this->assign('comment',$comment);
         $this->assign('floor',count($comment));
 //        return view('questions_show');
