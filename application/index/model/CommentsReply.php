@@ -13,5 +13,5 @@ use think\Model;
 
 class CommentsReply extends Model
 {
-    protected $table = "lee_Comments_reply"; //这里填写真实的数据库表名
+    protected $table = "lee_comments_reply"; //这里填写真实的数据库表名
 }

@@ -237,6 +237,7 @@
             var a = $('#comments_'+id).html();
             document.getElementById('comments_reply_id').value='';
             $('#comments_id').val(id);
+            $('#com_note').html();
             $('#com_note').html('将要回复：'+a);
             return false;
         }
@@ -247,6 +248,7 @@
             var a = $('#comments_reply_'+id).html();
             document.getElementById('comments_id').value='';
             $('#comments_reply_id').val(id);
+            $('#com_note').html();
             $('#com_note').html('将要回复：'+a);
             return false;
 

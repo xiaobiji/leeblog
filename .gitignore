@@ -7,4 +7,5 @@ runtime
 /thinkphp/library/think/console/command/Make.php
 .user.ini
 /thinkphp/library/think/console/command/optimize/Config.php
+/application/database.php
 database.php
