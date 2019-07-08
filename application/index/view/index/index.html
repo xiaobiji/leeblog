@@ -8,6 +8,7 @@
     <link href="__INDEX__/css/m.css" rel="stylesheet">
     <script src="__INDEX__/js/jquery-1.8.3.min.js"></script>
     <script src="__INDEX__/js/comm.js"></script>
+
     <!--[if lt IE 9]>
     <script src="__INDEX__/js/modernizr.js"></script>
     <![endif]-->
@@ -144,12 +145,12 @@
             <p>现居：{$config.address}</p>
             <p>Email：{$config.email}</p>
             <ul class="linkmore">
-                <li><a href="/" class="iconfont icon-zhuye" title="网站地址"></a></li>
-                <li><a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email={$config.email}"
-                       class="iconfont icon-youxiang" title="我的邮箱"></a></li>
-                <li><a href="http://wpa.qq.com/msgrd?v=3&uin={$config.online}&site=qq&menu=yes"
-                       class="iconfont icon---" title="QQ联系我"></a></li>
-                <li id="weixin"><a href="#" class="iconfont icon-weixin" title="关注我的微信"></a><i><img
+                <!--<li><a href="/" class="iconfont icon-zhuye"></a></li>-->
+                <li> <a href="/" title="网站地址"><img src="__INDEX__/picture/host.png" alt="" style="margin: 0 auto;margin-top: 10px;"></a></li>
+
+                <li><a href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email={$config.email}" title="我的邮箱"><img src="__INDEX__/picture/email.png" alt="" style="margin: 0 auto;margin-top: 10px;"></a></li>
+                <li><a href="http://wpa.qq.com/msgrd?v=3&uin={$config.online}&site=qq&menu=yes" title="QQ联系我"><img src="__INDEX__/picture/qq.png" alt="" style="margin: 0 auto;margin-top: 10px;"></a></li>
+                <li id="weixin"><a href="#" title="关注我的微信"><img src="__INDEX__/picture/wechat.png" alt="" style="margin: 0 auto;margin-top: 10px;"></a><i><img
                         src="/public/uploads/{$config.weixin}"></i></li>
             </ul>
         </div>

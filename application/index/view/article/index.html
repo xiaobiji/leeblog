@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -31,7 +31,7 @@
           </span>
       </h2>
       <h1 class="con_tilte">{$articleData.title}</h1>
-      <p class="bloginfo"><i class="avatar"><img src="__INDEX__/picture/avatar.jpg"></i><span>{$articleData.author}</span><span>{:date('Y-m-d',$articleData.addtime)}</span><span><a href="/category/{$articleData.cid}.html">【{$articleData.cname}】</a></span><span><script src="__INDEX__/js/8c859ecd482d4824ba4c9472a38319f9.js"></script>{$articleData.click}人已围观</span></p>
+      <p class="bloginfo"><i class="avatar"><img src="__INDEX__/picture/avatar.jpg"></i><span>{$articleData.author}</span><span>{:date('Y-m-d',$articleData.addtime)}</span><span><a href="/category/{$articleData.cid}.html">【{$articleData.cname}】</a></span><span>{$articleData.click}人已围观</span></p>
       <p class="con_info"><b>简介</b>{$articleData.remark}</p>
       <div class="con_text">
           {$articleData.content}
@@ -55,7 +55,7 @@
 
                 function articlelike($aid) {
                     var aid = $aid;
-                    var diggnum = $('#diggnum').val();
+                    var diggnum =$('#diggnum').html();
                     $.ajax({
                         type: "post",
                         url: '/index/article/like',
@@ -66,7 +66,8 @@
                         success: function(result){
                             var data = result;
                             if(data.code==201){
-                                $('#diggnum').html(diggnum+1);
+                                $('#diggnum').html();
+                                $('#diggnum').html(Number(diggnum)+Number(1));
                                 return false;
                             }else{
                                 return false;
