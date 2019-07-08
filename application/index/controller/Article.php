@@ -23,12 +23,11 @@ class Article extends Common
             ->alias('a')
             ->join('category b','b.id=a.cid','LEFT')
             ->join('pics c','c.aid=a.id','LEFT')
-            ->join('click k','k.aid=a.id','LEFT')
-            ->join('articlelike l','l.aid=a.id','LEFT')
+//            ->join('click k','a.id = k.aid','LEFT')
+            ->join('articlelike e','a.id = e.aid','LEFT')
             ->where('a.id',$id)
-            ->field('count(l.aid) as likenum,count(k.aid) as click,a.id,a.cid,a.title,a.content,a.desc,a.source,a.sourceurl,a.remark,a.author,a.addtime,a.reply_num,a.keyword,a.desc,b.name as cname,b.mark,GROUP_CONCAT(c.pic) as pic')
+            ->field('a.id,a.cid,count(e.aid) as likenum,a.title,a.content,a.desc,a.source,a.sourceurl,a.remark,a.author,a.addtime,a.reply_num,a.keyword,a.click_num as click,a.desc,b.name as cname,b.mark,GROUP_CONCAT(c.pic) as pic')
             ->find();
-
         if(!$articleData['cid'] ||!$articleData['cname'] ){
 
             return $this->fetch(APP_PATH.'/error/404.html');//404页面我放在application下面，可以自行指定
@@ -173,14 +172,17 @@ class Article extends Common
             if($aid){
                 $ip = $this->getip();
                 $uname = session('username');
+                $whereip['ip']=array('eq',$ip);
+                $whereip['aid']=array('eq',$aid);
                 $likeip =  $likeData = Db::name('articlelike')
-                    ->where('ip',$ip)
-                    ->where('aid',$aid)
+                    ->where($whereip)
                     ->field('id,uname,ip')
                     ->find();
+
+                $whereuname['ip']=array('eq',$ip);
+                $whereuname['aid']=array('eq',$aid);
                 $likeuname = Db::name('articlelike')
-                    ->where('uname',$uname)
-                    ->where('aid',$aid)
+                    ->where($whereuname)
                     ->field('id,uname,ip')
                     ->find();
                 if($likeuname['id']){
