@@ -102,7 +102,7 @@ class Wechat extends Controller
         $event=$postobj->Event;
         if($event=="subscribe"){
 //            欢迎语设置
-            $content=$this->getweixin('welcome');
+            $content=$this->getweixin('wechatwelcome');
         }
         $this->textmsg($postobj,$content);
     }
