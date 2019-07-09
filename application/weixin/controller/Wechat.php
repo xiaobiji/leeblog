@@ -1,6 +1,7 @@
 <?php
 namespace app\weixin\controller;
 use think\Controller;
+use think\Db;
 class Wechat extends Controller
 {
     //绑定接口时验证
@@ -32,22 +33,25 @@ class Wechat extends Controller
     }
 //    业务逻辑处理方法
     protected function responsemsg(){
+
         //因为一般PHP中register_globals参数都设置了On，
         //禁止了使用$GLOBALS["HTTP_RAW_POST_DATA"];
         //报错【未定义数组索引: HTTP_RAW_POST_DATA】
         //$poststr=$GLOBALS['HTTP_RAW_POST_DATA'];
         $poststr = file_get_contents("php://input");
         if(!empty($poststr)){
-            $postobj=simplexml_load_string($poststr);
+            $postobj=simplexml_load_string($poststr, 'SimpleXMLElement', LIBXML_NOCDATA);
             $msgtype=$postobj->MsgType;
             switch ($msgtype){
                 case "text":
                     $this->text_handle($postobj);
                     break;
                 case "event":
+
                     $this->event_handle($postobj);
                     break;
                 default:
+
                     $this->handle($postobj);
                     break;
             }
@@ -63,28 +67,33 @@ class Wechat extends Controller
      * @param $postobj 用户发送来的消息对象
      */
     private function text_handle($postobj){
+
         $keyword=$postobj->Content;
-        $res=db('article')->alias('a')
-            ->join('pics b','b.aid=a.id')
-            ->where('a.title','like',"%".$keyword."%")
-            ->field('a.title,a.remark,a.id,b.pic')
+        $where['a.title'] = array('like','%'.$keyword.'%');
+        $res= Db::name('article')
+            ->alias('a')
+            ->join('category b','b.id=a.cid')
+            ->join('pics c','c.aid=a.id','LEFT')
+            ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
+            ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
+            ->where($where)
             ->group('a.id')
-            ->limit(8)
             ->select();
         $num=count($res);
         if($res){
             $str="<item>
-<Title><![CDATA[%s]]></Title>
-<Description><![CDATA[%s]]></Description>
-<PicUrl><![CDATA[%s]]></PicUrl>
-<Url><![CDATA[%s]]></Url>
-</item>";
+            <Title><![CDATA[%s]]></Title>
+            <Description><![CDATA[%s]]></Description>
+            <PicUrl><![CDATA[%s]]></PicUrl>
+            <Url><![CDATA[%s]]></Url>
+            </item>";
             $list="";
             foreach ($res as $v){
                $title=$v['title'];
                $desc=$v['remark'];
                $pic=request()->domain()."/".$v['pic'];
                $url=url('weixin/wechat/show',['id'=>$v['id']],'',true);
+//               $url="/article/".$v['id']."html";
                $str_tmp=sprintf($str,$title,$desc,$pic,$url);
                $list=$list.$str_tmp;
             }
@@ -120,6 +129,7 @@ class Wechat extends Controller
     private function textmsg($postobj,$content){
         $toUser=$postobj->FromUserName;
         $fromUser=$postobj->ToUserName;
+
         $time=time();
         $texttpl="<xml>
 <ToUserName><![CDATA[%s]]></ToUserName>
