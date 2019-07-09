@@ -67,8 +67,7 @@
                     <div class="newspic">
                         <ul>
                             {volist name='vo.arts' id='ao' offset='0' length='2'}
-                            <li><a href="/article/{$ao.id}.html"><img
-                                    src="{if($ao.pic[0])}/public/{$ao.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"><span>{$ao.title}</span></a>
+                            <li><a href="/article/{$ao.id}.html"><img src="{if($ao.pic[0])}/public/{$ao.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"><span>{$ao.title}</span></a>
                             </li>
                             {/volist}
                         </ul>

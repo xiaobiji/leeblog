@@ -90,16 +90,19 @@ class Search extends Common
                 ->field('id,tname')
                 ->find();
             $res = Db::name('article')
-                ->where('title','like','%'.$tdata['tname'].'%')
+                ->where('keyword','like','%'.$tdata['id'].'%')
                 ->select();
+
             $count = count($res);
+
             $articles = Db::name('article')
                 ->alias('a')
                 ->join('category b','b.id=a.cid')
                 ->join('pics c','c.aid=a.id','LEFT')
-                ->where('title','like','%'.$tdata['tname'].'%')
+                ->where('a.keyword','like','%'.$tdata['id'].'%')
                 ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
                 ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
+                ->group('a.id')
                 ->paginate(10,$count)
                 ->each(function($item, $key){
                     $item['pic']=explode(',',$item['pic']);
@@ -114,7 +117,6 @@ class Search extends Common
             $seo['title']='搜索'.$keywords;
             $seo['keyword']='搜索'.$keywords;
             $seo['desc']='搜索'.$keywords;
-
             $this->assign([
                 'keyWords'=>$keywords,
                 'articles'=>$articles,

@@ -272,7 +272,7 @@ class Common extends Controller
      * 获取右侧标签管理
      * @return false|\PDOStatement|string|\think\Collection
      */
-    protected function get_tags($limit='5'){
+    protected function get_tags($limit=''){
         $res=db('tags')
             ->order('sort desc,id ASC')
             ->field('tname,id')
