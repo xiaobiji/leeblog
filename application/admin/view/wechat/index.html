@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{$Think.lang.websetting}</title>
+    <link rel="stylesheet" href="/public/static/admin/vendor/layui/css/layui.css">
+    <link rel="stylesheet" href="/public/static/admin/custom/css/style.css">
+</head>
+<body style="padding:10px 10px;">
+<div class="layui-container">
+    <form class="layui-form" action="?" method="post" enctype="multipart/form-data">
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$Think.lang.wechatname}</label>
+            <div class="layui-input-block">
+                <input type="text" name="wechatname" value="{$content.wechatname?$content.wechatname:''}" required  lay-verify="required" placeholder="{$Think.lang.wechatnametip}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$Think.lang.wechatnum}</label>
+            <div class="layui-input-block">
+                <input type="text" name="wechatnum" value="{$content.wechatnum?$content.wechatnum:''}" required lay-verify="required" placeholder="{$Think.lang.wechatnumtip}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$Think.lang.appid}</label>
+            <div class="layui-input-block">
+                <input type="text" name="appid" value="{$content.appid?$content.appid:''}" required lay-verify="required" placeholder="{$Think.lang.appidtip}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$Think.lang.appsecret}</label>
+            <div class="layui-input-block">
+                <input type="text" name="appsecret" value="{$content.appsecret?$content.appsecret:''}" required lay-verify="required" placeholder="{$Think.lang.appsecrettip}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$Think.lang.token}</label>
+            <div class="layui-input-block">
+                <input type="text" name="token" value="{$content.token?$content.token:''}" required lay-verify="required" placeholder="{$Think.lang.tokentip}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$Think.lang.encodingaeskey}</label>
+            <div class="layui-input-block">
+                <input type="text" name="encodingaeskey" value="{$content.encodingaeskey?$content.encodingaeskey:''}" required lay-verify="required" placeholder="{$Think.lang.encodingaeskeytip}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">关注欢迎语</label>
+            <div class="layui-input-block">
+                <input type="text" name="wechatwelcome" value="{$content.wechatwelcome?$content.wechatwelcome:'欢迎关注微信公众号'}" required  lay-verify="required" placeholder="wechatwelcometip" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/public/static/admin/vendor/js/jquery.js"></script>
+<script src="/public/static/admin/vendor/layui/layui.js"></script>
+<script src="/static/admin/vendor/js/jquery.js"></script>
+<script src="/static/admin/vendor/layui/layui.js"></script>
+<script src="/static/admin/custom/js/admin.js"></script>
+<script>
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+        });
+    });
+    $(function(){
+        $(window.parent.document).find('#righttitle').text($('title').text());
+    });
+</script>
+</body>
+</html>

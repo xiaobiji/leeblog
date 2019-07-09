@@ -32,7 +32,11 @@ class Wechat extends Controller
     }
 //    业务逻辑处理方法
     protected function responsemsg(){
-        $poststr=$GLOBALS['HTTP_RAW_POST_DATA'];
+        //因为一般PHP中register_globals参数都设置了On，
+        //禁止了使用$GLOBALS["HTTP_RAW_POST_DATA"];
+        //报错【未定义数组索引: HTTP_RAW_POST_DATA】
+        //$poststr=$GLOBALS['HTTP_RAW_POST_DATA'];
+        $poststr = file_get_contents("php://input");
         if(!empty($poststr)){
             $postobj=simplexml_load_string($poststr);
             $msgtype=$postobj->MsgType;
@@ -224,9 +228,14 @@ class Wechat extends Controller
      * @param $field 字段名
      * @return mixed 返回对应的配置项
      */
+//    protected function getweixin($field){
+//        $config=db('config')->field('weixin')->find();
+//        $weixin=json_decode($config['weixin'],true);
+//        return $weixin[$field];
+//    }
     protected function getweixin($field){
-        $config=db('config')->field('weixin')->find();
-        $weixin=json_decode($config['weixin'],true);
+        $config=db('wechat')->field('content')->find();
+        $weixin=json_decode($config['content'],true);
         return $weixin[$field];
     }
 }

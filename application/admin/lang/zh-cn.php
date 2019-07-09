@@ -132,6 +132,23 @@
         'reply_time'=>'回复时间',
         'no_answerer'=>'此问题还没有回答',
 
+        //微信配置
+        'wechatconfig'=>'微信配置',
+        'wechatpara'=>'微信配置',
+        'wechatname'=>'公众号名称',
+        'wechatnametip'=>'请输入公众号名称',
+        'wechatnum'=>'微信号',
+        'wechatnumtip'=>'请输入微信号',
+        'appid'=>'AppID',
+        'appidtip'=>'请输入开发者ID(AppID)',
+        'appsecret'=>'AppSecret',
+        'appsecrettip'=>'请输入开发者密码(AppSecret)',
+        'token'=>'令牌(Token)',
+        'tokentip'=>'请输入微信令牌(Token)',
+        'encodingaeskey'=>'encodingaeskey',
+        'encodingaeskeytip'=>'请输入微信消息加解密密钥encodingaeskey',
+        'wechatwelcome'=>'关注欢迎语',
+        'wechatwelcometip'=>'请输入微信关注欢迎语',
 
 //  2.列表
         'delall'=>'批量删除',
