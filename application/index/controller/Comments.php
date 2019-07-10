@@ -119,7 +119,7 @@ class Comments extends Common
                     'is_reply'  =>1,
                     'reply_num' => $old_reply_num['reply_num']+1
                 ];
-                Db::name('article')->where('id',$aid)->update($q_data);
+                $result=Db::name('article')->where('id',$aid)->update($q_data);
                 if(!$result){
                     $this->error('评论次数更新失败');
                 }
