@@ -9,3 +9,5 @@ runtime
 /thinkphp/library/think/console/command/optimize/Config.php
 /database.php
 database.php
+application/database.php
+/application/database.php

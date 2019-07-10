@@ -126,7 +126,7 @@
                   <p></p>
                   <div class="ecomment">
                       <span class="ecommentauthor">{$co.from_user}回复{$co.to_user}：<span class="ecommentauthor" style="float: right;font-size: 12px">{$co.create_time|date="Y-m-d H:i:s",###} <a href="#plpost" onclick="comments_reply_id({$co.id})" style="font-size:12px;display: block;background: #040404;color: #fff;border: 0;line-height: 20px;padding: 0 5px;margin-left:5px;border-radius: 5px;float: right;"> 回复 </a></span></span>
-                      <p id="comments_reply_{$vo.id}" class="ecommenttext"> {$co.content}</p>
+                      <p id="comments_reply_{$co.id}" class="ecommenttext"> {$co.content}</p>
                   </div>
                   {if $co.reply_coments}
                   {$co.reply_coments}
@@ -248,6 +248,7 @@
         var id = $id;
         if(id){
             var a = $('#comments_reply_'+id).html();
+            alert('#comments_reply_'+id);
             document.getElementById('comments_id').value='';
             $('#comments_reply_id').val(id);
             $('#com_note').html();
