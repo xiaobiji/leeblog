@@ -208,6 +208,20 @@ class Comments extends Common
                 if(!$result){
                     $this->error('被回复次数更新失败');
                 }
+            }else{
+                //插入评论表 回复次数 +1
+                $old_com_reply_num=db('comments')
+                    ->where('id',$id)
+                    ->field('id,reply_num')
+                    ->find();
+                $c_data = [
+                    'reply_num' => $old_com_reply_num['reply_num']+1
+                ];
+//            $result=model('comments')->allowField(true)->save($c_data,['id' => $id]);
+                $result=Db::name('comments')->where('id',$id)->update($c_data);
+                if(!$result){
+                    $this->error('评论回复次数更新失败');
+                }
             }
             //插入问题表 回复次数 +1
             $old_reply_num=db('article')
@@ -222,19 +236,7 @@ class Comments extends Common
             if(!$result){
                 $this->error('文章回复次数更新失败');
             }
-            //插入评论表 回复次数 +1
-            $old_com_reply_num=db('comments')
-                ->where('id',$id)
-                ->field('id,reply_num')
-                ->find();
-            $c_data = [
-                'reply_num' => $old_com_reply_num['reply_num']+1
-            ];
-//            $result=model('comments')->allowField(true)->save($c_data,['id' => $id]);
-            $result=Db::name('comments')->where('id',$id)->update($c_data);
-            if(!$result){
-                $this->error('评论回复次数更新失败');
-            }
+
             $this->success('回复成功');
             return;
         }
