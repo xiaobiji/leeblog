@@ -97,6 +97,7 @@ class Wechat extends Controller
                $str_tmp=sprintf($str,$title,$desc,$pic,$url);
                $list=$list.$str_tmp;
             }
+
             $this->newsmsg($postobj,$list,$num);
         }else{
 //            $content="没有检索到相关的数据";
@@ -162,8 +163,10 @@ class Wechat extends Controller
 %s
 </Articles>
 </xml>";
-    $result=sprintf($newstpl,$toUser,$fromUser,$time,$num,$list);
-    echo $result;
+
+        $result=sprintf($newstpl,$toUser,$fromUser,$time,$num,$list);
+
+        echo $result;
     }
 
 //    显示检索内容详情
@@ -248,5 +251,11 @@ class Wechat extends Controller
         $weixin=json_decode($config['content'],true);
         return $weixin[$field];
     }
+
+
+
+
+
+
 }
 ?>
