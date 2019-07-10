@@ -230,7 +230,8 @@ class Comments extends Common
             $c_data = [
                 'reply_num' => $old_com_reply_num['reply_num']+1
             ];
-            $result=model('Comments')->allowField(true)->save($c_data,['id' => $id]);
+//            $result=model('comments')->allowField(true)->save($c_data,['id' => $id]);
+            $result=Db::name('comments')->where('id',$id)->update($c_data);
             if(!$result){
                 $this->error('评论回复次数更新失败');
             }
