@@ -18,6 +18,12 @@
             </div>
         </div>
         <div class="layui-form-item">
+            <label class="layui-form-label">{$Think.lang.webseotitle}</label>
+            <div class="layui-input-block">
+                <input type="text" name="seotitle" value="{$config.seotitle?$config.seotitle:''}" required  lay-verify="required" placeholder="{$Think.lang.seotitletip}" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
             <label class="layui-form-label">{$Think.lang.logo}</label>
             <div class="layui-input-block">
                 <input type="text" name="logo" value="{$config.logo?$config.logo:''}" placeholder="{$Think.lang.logotip}" autocomplete="off" class="layui-input">

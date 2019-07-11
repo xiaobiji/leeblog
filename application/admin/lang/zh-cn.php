@@ -175,6 +175,9 @@
 //    config 语言包
         'webtitle'=>'网站名称',
         'webtitletip'=>'请输入网站名称',
+        'webseotitle'=>'网站优化title',
+        'seotitle'=>'网站优化title',
+        'seotitletip'=>'请输入网站优化title',
         'logo'=>'LOGO上传',
         'logotip'=>'LOGO上传',
         'phone'=>'手机',
