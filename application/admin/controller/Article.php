@@ -103,6 +103,8 @@ class Article extends Common
     public function edit($id){
         if(request()->isPost()){
             $data=input('post.');
+            p($data);
+
             $data['addtime']=strtotime($data['addtime']);
             if(isset($data['istop'])){
                 $data['toptime']=time();
@@ -115,7 +117,6 @@ class Article extends Common
             if(!$validate->check($data)){
                 $this->error($validate->getError());
             }
-
             //将获取的关键词数组转为以‘,’隔开的字符串
             if(is_array($data['keyword']) ){
                 $data['keyword'] = implode(',',$data['keyword']);
