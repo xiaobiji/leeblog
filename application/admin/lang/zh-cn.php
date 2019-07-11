@@ -17,7 +17,7 @@
         'inputpassword'=>'请输入密码',
         'inputcode'=>'请输入验证码',
         'loginbtn'=>'登录',
-        'copyright'=>'版权所有：华企互动（北京）科技有限公司',
+        'copyright'=>'版权所有：小李Lee',
 // 顶部菜单
         'topsetting'=>'设置',
         'websetting'=>'网站配置',
