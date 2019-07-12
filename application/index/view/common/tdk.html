@@ -1,3 +1,3 @@
-<title>{$seo.title}_{$config.title}</title>
+<title>{$seo.title}_{if $config.seotitle}{$config.seotitle}{else}{$config.title}{/if}</title>
 <meta name="keywords" content="{$seo.keyword}">
 <meta name="description" content="{$seo.desc}">
