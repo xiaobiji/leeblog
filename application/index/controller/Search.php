@@ -57,7 +57,7 @@ class Search extends Common
                 });
             $yanfa=$this->getchanpin('yanfa',8);
 
-            $seo['title']='搜索'.$keywords;
+            $seo['title']='搜索-'.$keywords;
             $seo['keyword']='搜索'.$keywords;
             $seo['desc']='搜索'.$keywords;
 
@@ -114,7 +114,7 @@ class Search extends Common
                     }
                     return $item;
                 });
-            $seo['title']='标签—'.$tdata['tname'];
+            $seo['title']='标签-'.$tdata['tname'];
             $seo['keyword']='标签查询'.$tdata['tname'];
             $seo['desc']='标签查询-'.$tdata['tname'];
             $this->assign([
