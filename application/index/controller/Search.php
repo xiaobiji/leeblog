@@ -114,9 +114,9 @@ class Search extends Common
                     }
                     return $item;
                 });
-            $seo['title']='搜索'.$keywords;
-            $seo['keyword']='搜索'.$keywords;
-            $seo['desc']='搜索'.$keywords;
+            $seo['title']='搜索'.$tdata['tname'];
+            $seo['keyword']='搜索'.$tdata['tname'];
+            $seo['desc']='标签查询-'.$tdata['tname'];
             $this->assign([
                 'keyWords'=>$keywords,
                 'articles'=>$articles,

@@ -84,7 +84,7 @@ class Index extends Common
         $config=db('config')->field('config')->find();
         //解码配置信息
         $config=json_decode($config['config'],true);
-        $seo['title']=isset($config['seotitle'])?$config['seotitle']:$config['title'];
+        $seo['title']=$config['title'];
         $seo['keyword']=$config['keyword'];
         $seo['desc']=$config['desc'];
 
