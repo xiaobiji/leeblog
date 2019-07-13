@@ -66,9 +66,6 @@ class Article extends Common
         //添加浏览量，点击量 判断浏览ip  结束
 
 
-        $seo['title']=$articleData['title'];
-        $seo['keyword']=$articleData['remark'];
-        $seo['desc']=$articleData['desc'];
         //获取ci文章栏目的文章模板
         $art_template = Db::name('category')
             ->where('id',$articleData['cid'])
@@ -92,15 +89,20 @@ class Article extends Common
         //获取标签名称
         $keywords_id = explode(",",$articleData['keyword']);
         $keywords=[];
+        $seo_keyword ='';
         foreach ($keywords_id as $k => $v){
             $a=Db::name('tags')
                 ->where('id',$v)
                 ->field('id,tname')
                 ->find();
             array_push($keywords,$a);
+            $seo_keyword .= $a['tname'].',';
         }
 
         $articleData['keyword'] = $keywords;
+        $seo['title']=$articleData['title'];
+        $seo['keyword']=rtrim($seo_keyword, ",");
+        $seo['desc']=$articleData['desc'];
         //面包屑导航
         $position = $this->position($articleData['cid']);
         //上一篇
