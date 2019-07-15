@@ -8,13 +8,16 @@ class Index extends Common
     public function index()
     {
         //获取首页排序值前6的栏目，并分别获取里面7个文章
+        $where['pid']=
         $six_cates = $chanpinpids=db('category')
             ->field('id,name,sort')
             ->order('sort Desc,id asc')
             ->limit(6)
             ->select();
         foreach ($six_cates as $k =>$v){
-            $six_cates[$k]['arts'] = $this->getArticles(7,$six_cates[$k]['id']);
+            //获取当前栏目下所有子栏目id；用于文章查询
+            $vcids = $this->getAllChildcateIds($v['id']);
+            $six_cates[$k]['arts'] = $this->getArticles(7,$vcids);
         }
         //获取最新文章
         $articles = $this->getnewarticle(8);
