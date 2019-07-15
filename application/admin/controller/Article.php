@@ -103,7 +103,6 @@ class Article extends Common
     public function edit($id){
         if(request()->isPost()){
             $data=input('post.');
-            p($data);
 
             $data['addtime']=strtotime($data['addtime']);
             if(isset($data['istop'])){
