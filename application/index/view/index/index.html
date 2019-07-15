@@ -25,7 +25,7 @@
             <div class="banner">
                 <div id="banner" class="fader">
                     {volist name="banner" id="vo"}
-                    <li class="slide"><a href="{$vo.url}" target="_blank" title="{$vo.title}"><img
+                    <li class="slide"><a href="{$vo.url}"  title="{$vo.title}"><img
                             src="/public/{$vo.pic}"></a></li>
                     {/volist}
                     <div class="fader_controls">
@@ -92,14 +92,14 @@
             <h2 class="htitle">
               <span class="hnav">
                   {volist name='indexTagsData' id='vo'}
-                <a href="/search/tags/{$vo.id}.html" target="_blank">{$vo.tname}</a> &nbsp;
+                <a href="/search/tags/{$vo.id}.html" >{$vo.tname}</a> &nbsp;
                   {/volist}
             </span>特别推荐</h2>
             <ul>
                 {volist name="tuijianData" id="vo" offset='2' length='8'}
-                <li><i class="ztpic"><a href="/article/{$vo.id}.html" target="_blank"><img
+                <li><i class="ztpic"><a href="/article/{$vo.id}.html" ><img
                         src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}"></a></i>
-                    <b>{$vo.title}</b><span>{$vo.remark}</span><a href="/article/{$vo.id}.html" target="_blank"
+                    <b>{$vo.title}</b><span>{$vo.remark}</span><a href="/article/{$vo.id}.html" 
                                                                   class="readmore">文章阅读</a></li>
                 {/volist}
             </ul>
@@ -112,10 +112,10 @@
 
                 {volist name="articles" id="vo"}
                 <li>
-                    <h3 class="blogtitle">{if $vo.istop}<b>【顶】</b>{/if}{if $vo.istuijian}<b style="color: blue">【荐】</b>{/if}<a href="/article/{$vo.id}.html" target="_blank">{$vo.title}</a></h3>
+                    <h3 class="blogtitle">{if $vo.istop}<b>【顶】</b>{/if}{if $vo.istuijian}<b style="color: blue">【荐】</b>{/if}<a href="/article/{$vo.id}.html" >{$vo.title}</a></h3>
                     {if($vo.pic[0])}
                     <span class="blogpic imgscale">
-                        <i><a href="/category/{$vo.cid}.html" target="_blank">{$vo.cname}</a></i>
+                        <i><a href="/category/{$vo.cid}.html" >{$vo.cname}</a></i>
                         <a href="/article/{$vo.id}.html" title="{$vo.title}">
                             <img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}" alt="{$vo.title}">
                         </a>
@@ -124,7 +124,7 @@
                     <p class="blogtext">{$vo.remark} </p>
                     <p class="bloginfo">
                         <!--<i class="avatar"><script src="__INDEX__/js/thea6.js"></script></i><span></span>-->
-                        <span>{:date('Y-m-d',$vo.addtime)}</span><span>【<a href="/category/{$vo.cid}.html" target="_blank">{$vo.cname}</a>】</span></p>
+                        <span>{:date('Y-m-d',$vo.addtime)}</span><span>【<a href="/category/{$vo.cid}.html" >{$vo.cname}</a>】</span></p>
                     <a href="/article/{$vo.id}.html" class="viewmore">阅读更多</a></li>
                 {/volist}
                 <!--pagelist-->
@@ -229,7 +229,7 @@
             <h2 class="htitle">隔壁邻居</h2>
             <ul>
                 {volist name="linksData" id="vo"}
-                <li><a href="{$vo.url}" target="_blank">{$vo.name}</a></li>
+                <li><a href="{$vo.url}" >{$vo.name}</a></li>
                 {/volist}
             </ul>
         </div>
