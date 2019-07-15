@@ -46,7 +46,7 @@
             <div class="layui-input-block">
                 {volist name="tags" id="vo"}
                 <div style="float: left">
-                <input type="checkbox" name="keyword" autocomplete="off" class="layui-input" value="{$vo.id}"><span style="margin-right: 8px;margin-left: -6px;">{$vo.tname}</span></div>
+                <input type="checkbox" name="keyword[]" autocomplete="off" class="layui-input" value="{$vo.id}"><span style="margin-right: 8px;margin-left: -6px;">{$vo.tname}</span></div>
                 {/volist}
             </div>
         </div>
