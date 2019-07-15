@@ -19,6 +19,7 @@ Route::rule('article/:id','index/Article/index','get','',['id'=>'\d+']);
 Route::rule('comments/:aid','index/Comments/index','get','',['aid'=>'\d+']);
 Route::rule('search/:keywords','index/Search/index','request','',['keywords'=>'\d+']);
 Route::rule('search/tags/:keywords','index/Search/tags','get','',['keywords'=>'\d+']);
+Route::rule('time','index/Time/index','get');
 
 
 // Route::rule('admin_jghc','admin/login/index','get');
