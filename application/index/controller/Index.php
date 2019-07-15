@@ -10,6 +10,7 @@ class Index extends Common
         //获取首页排序值前6的栏目，并分别获取里面7个文章
         $where['pid']=
         $six_cates = $chanpinpids=db('category')
+            ->where('isshow',1)
             ->field('id,name,sort')
             ->order('sort Desc,id asc')
             ->limit(6)
@@ -140,15 +141,18 @@ class Index extends Common
         $res=Db::name('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
+            ->join('category b','a.cid=b.id','LEFT')
+            ->where('b.isshow',1)
             ->field('a.id')
             ->select();
         $count = count($res);
         $data = Db::name('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
-            ->join('category t','a.cid=t.id','LEFT')
+            ->join('category b','a.cid=b.id','LEFT')
+            ->where('b.isshow',1)
             ->order('a.toptime desc,a.addtime Desc')
-            ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic,t.name as cname')
+            ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic,b.name as cname')
             ->group('a.id')
             ->paginate($num,$count)
             ->each(function($item, $key){
@@ -176,6 +180,7 @@ class Index extends Common
             $mapb='';
         }
         $map['a.cid']= array('in',$id);
+        $map['b.isshow']= array('=',1);
         $data = db('article')
             ->alias('a')
             ->join('category b','b.id=a.cid')

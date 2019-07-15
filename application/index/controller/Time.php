@@ -15,16 +15,16 @@ class Time extends Common
     public function index()
     {
         $res=db('article')
-            ->join('category b','b.id=a.cid')
             ->alias('a')
-            ->where('isshow',1)
+            ->join('category b','b.id=a.cid')
+            ->where('b.isshow',1)
             ->select();
         $count = count($res);
         $data = db('article')
             ->alias('a')
             ->join('category b','b.id=a.cid')
+            ->where('b.isshow',1)
             ->order('a.addtime Desc')
-            ->where('isshow',1)
             ->field('a.id,a.title,a.addtime')
             ->group('a.id')
             ->paginate(20,$count);

@@ -71,7 +71,7 @@ class Common extends Controller
     }
 
     /**
-     * 获取导航栏目
+     * 获取导航栏目 无限极查询  开始
      * @return false|\PDOStatement|string|\think\Collection
      */
     public function getAllCate($style=''){
@@ -84,9 +84,7 @@ class Common extends Controller
         return $res;
 
     }
-
     public function getallcates($list, $pid = 0){
-
         $tree = [];
         if (!empty($list)) {
             $newList = [];
@@ -111,8 +109,14 @@ class Common extends Controller
         }
         return $tree;
     }
+    //结束
 
 
+    /**
+     * lee  将获取到的全部栏目数组拼接为HTML格式 输出到前台页面（用于未知几级栏目的查询输出） 开始
+     * @param $res
+     * @return string
+     */
     private function get_cate_html($res){
         if(!empty($res)){
             $html='';
@@ -134,6 +138,8 @@ class Common extends Controller
                 $html .='</li>';
             }
             return $html;
+        }else{
+            return false;
         }
     }
     private function cate_htmls($arr){
@@ -152,6 +158,8 @@ class Common extends Controller
 
         return $html;
     }
+    // lee  将获取到的全部栏目数组拼接为HTML格式 输出到前台页面（用于未知几级栏目的查询输出）结束
+
 
     /**
      * 获取网站公告
@@ -174,11 +182,13 @@ class Common extends Controller
      * @return false|\PDOStatement|string|\think\Collection
      */
     protected function get_tuijian_articles($limit='5'){
+        $where['a.istuijian']=array('=',1);
+        $where['t.isshow']=array('=',1);
         $res=db('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
             ->join('category t','a.cid=t.id','LEFT')
-            ->where('istuijian',1)
+            ->where($where)
             ->field('a.id,a.title,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic,t.name as cname')
             ->order('a.sort desc,a.addtime desc')
             ->group('a.id')
@@ -193,12 +203,14 @@ class Common extends Controller
             }
             if($ids){
                 $map['a.id']=array('not in',"'".$ids."'");
+                $map['t,isshow']=array('=',1);
             }else{
-                $map ='';
+                $map['t,isshow']=array('=',1);
             }
             $data=db('article')
                 ->alias('a')
                 ->join('pics c','c.aid=a.id','LEFT')
+                ->join('category t','a.cid=t.id','LEFT')
                 ->where($map)
                 ->field('a.id,a.title,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic')
                 ->order('a.sort desc,a.addtime desc')
@@ -226,8 +238,11 @@ class Common extends Controller
      */
     private function get_hot_articles($limit='5'){
         $res=db('article')
-            ->order('sort desc,id desc')
-            ->field('id,title,click_num,cmt_count')
+            ->alias('a')
+            ->join('category b','a.cid=b.id','LEFT')
+            ->where('b.isshow',1)
+            ->order('a.sort desc,a.id desc')
+            ->field('a.id,a.title,a.click_num,a.cmt_count')
             ->limit($limit)
             ->select();
         return $res;
@@ -239,6 +254,8 @@ class Common extends Controller
     private function get_click_articles($limit='10'){
         $res=db('article')
             ->alias('a')
+            ->join('category b','a.cid=b.id','LEFT')
+            ->where('b.isshow',1)
             ->order('click_num desc,id desc')
             ->join('pics c','c.aid=a.id','LEFT')
             ->field('a.id,a.title,a.click_num,a.cmt_count,a.content,GROUP_CONCAT(c.pic) as pic')
@@ -262,8 +279,11 @@ class Common extends Controller
      */
     private function get_like_articles($limit='10'){
         $res=db('article')
-            ->order('like_num desc,id desc')
-            ->field('id,title,like_num,cmt_count')
+            ->alias('a')
+            ->join('category b','a.cid=b.id','LEFT')
+            ->where('b.isshow',1)
+            ->order('a.like_num desc,a.id desc')
+            ->field('a.id,a.title,a.like_num,a.cmt_count')
             ->limit($limit)
             ->select();
         return $res;
@@ -333,8 +353,18 @@ class Common extends Controller
 
     //左侧子栏目列表
     protected function getchild($mark='about'){
-        $res_pid=db('category')->where('mark',$mark)->field('id')->find();
-        $res=db('category')->where('pid',$res_pid['id'])->field('id,name,type')->select();
+        $where['mark']=array('=',$mark);
+        $where['isshow']=array('=',1);
+        $res_pid= db('category')
+            ->where($where)
+            ->field('id')
+            ->find();
+        $map['pid']=array('=',$res_pid['id']);
+        $map['isshow']=array('=',1);
+        $res=db('category')
+            ->where($map)
+            ->field('id,name,type')
+            ->select();
         return $res;
     }
 
@@ -346,8 +376,8 @@ class Common extends Controller
             $cates=db('category')->field('id,name,pid')->find($cid);
             $pos[]=$cates;
         }
-        $data=db('category')->field('id,name,pid')->select();//所有栏目信息
-        $cates=db('category')->field('id,name,pid')->find($cid);//当前栏目信息
+        $data=db('category')->field('id,name,pid')->where('isshow',1)->select();//所有栏目信息
+        $cates=db('category')->field('id,name,pid')->where('isshow',1)->find($cid);//当前栏目信息
         foreach ($data as $k => $v) {
             if($cates['pid']==$v['id']){
                 $pos[]=$v;
@@ -416,6 +446,8 @@ class Common extends Controller
             $mapb='';
         }
         $map['a.cid']= array('in',$id);
+        $map['b.isshow']= array('=',1);
+
         $res=db('article')
             ->join('category b','b.id=a.cid')
             ->alias('a')
@@ -457,6 +489,7 @@ class Common extends Controller
         {
             $ids = '';
             $where['pid'] = array('in',$categoryID);
+            $where['isshow'] = array('=',1);
             $cate = db('category')->where($where)->select();
             foreach ($cate as $k=>$v)
             {
@@ -501,8 +534,10 @@ class Common extends Controller
     }
     //获取所有含有chanpin标识栏目中前6个商品
     protected function getchanpin($mark,$num=6){
+        $map['mark']= array('=',$mark);
+        $map['isshow']= array('=',1);
         $res_pid=db('category')
-            ->where('mark',$mark)
+            ->where($map)
             ->field('id,name,pid')
             ->order('sort Desc,id asc')
             ->select();

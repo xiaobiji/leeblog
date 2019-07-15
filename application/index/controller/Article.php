@@ -18,6 +18,8 @@ class Article extends Common
      */
     public function index($id)
     {
+        $map['b.isshow']=array('=',1);
+        $map['a.id']=array('=',$id);
         //获取当前文章信息
         $articleData=Db::name('article')
             ->alias('a')
@@ -25,7 +27,7 @@ class Article extends Common
             ->join('pics c','c.aid=a.id','LEFT')
 //            ->join('click k','a.id = k.aid','LEFT')
             ->join('articlelike e','a.id = e.aid','LEFT')
-            ->where('a.id',$id)
+            ->where($map)
             ->field('a.id,a.cid,count(e.aid) as likenum,a.title,a.content,a.desc,a.source,a.sourceurl,a.remark,a.author,a.addtime,a.reply_num,a.keyword,a.click_num as click,a.desc,b.name as cname,b.mark,GROUP_CONCAT(c.pic) as pic')
             ->find();
         if(!$articleData['cid'] ||!$articleData['cname'] ){

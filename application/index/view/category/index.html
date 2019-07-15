@@ -32,10 +32,10 @@
 
         {volist name="articles" id="vo"}
         <li>
-          <h3 class="blogtitle">{if $vo.istop}<b>【顶】</b>{/if}{if $vo.istuijian}<b style="color: blue">【荐】</b>{/if}<a href="/article/{$vo.id}.html" target="_blank">{$vo.title}</a></h3>
+          <h3 class="blogtitle">{if $vo.istop}<b>【顶】</b>{/if}{if $vo.istuijian}<b style="color: blue">【荐】</b>{/if}<a href="/article/{$vo.id}.html">{$vo.title}</a></h3>
           {if($vo.pic[0])}
           <span class="blogpic imgscale">
-                        <i><a href="/category/{$vo.cid}.html" target="_blank">{$vo.cname}</a></i>
+                        <i><a href="/category/{$vo.cid}.html">{$vo.cname}</a></i>
                         <a href="/article/{$vo.id}.html" title="{$vo.title}">
                             <img src="{if($vo.pic[0])}/public/{$vo.pic[0]}{else/}__INDEX__/picture/noimg.jpg{/if}" alt="{$vo.title}">
                         </a>
@@ -44,7 +44,7 @@
           <p class="blogtext">{$vo.remark} </p>
           <p class="bloginfo">
             <!--<i class="avatar"><script src="__INDEX__/js/thea6.js"></script></i><span></span>-->
-            <span>{:date('Y-m-d',$vo.addtime)}</span><span>【<a href="/category/{$vo.cid}.html" target="_blank">{$vo.cname}</a>】</span></p>
+            <span>{:date('Y-m-d',$vo.addtime)}</span><span>【<a href="/category/{$vo.cid}.html">{$vo.cname}</a>】</span></p>
           <a href="/article/{$vo.id}.html" class="viewmore">阅读更多</a></li>
         {/volist}
 

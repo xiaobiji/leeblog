@@ -31,7 +31,6 @@ class Category extends Common
             $tuijianArticles = $this->getcateArticles(5,$cids);
             //获取当前栏目信息
         }
-
         //查询当前栏目下所有子栏目
         $childCate = $this->getChildCate($id);
         $style = 'block';
@@ -39,6 +38,7 @@ class Category extends Common
             $childCate = $this->getAllCate();
             $style = 'none';
         }
+
         foreach ($childCate as $k=>$v){
             //获取当前栏目下所有子栏目id；用于文章查询
             $vcids = $this->getAllChildcateIds($v['id']);
@@ -51,7 +51,6 @@ class Category extends Common
         $position = $this->position($id);
         $yanfa=$this->getchanpin('yanfa',8);
         $news=$this->getchanpin('news',8);
-
         $this->assign([
             'cateData'=>$cateData,
             'childCate'=>$childCate,
@@ -78,8 +77,10 @@ class Category extends Common
      * lee获取当前栏目信息
      */
     private function getCate($id){
+        $map['isshow']= array('=',1);
+        $map['id']= array('=',$id);
         $data=Db::name('category')
-            ->where('id',$id)
+            ->where($map)
             ->field('id,name,keyword,desc,cate_template,cover_template,pid,mark,content,pic,remark')
             ->find();
         return $data;
@@ -91,6 +92,7 @@ class Category extends Common
      */
     protected function getcateArticles($num='10',$id){
         $map['a.cid']= array('in',$id);
+        $map['b.isshow']= array('=',1);
         $res=db('article')
             ->join('category b','b.id=a.cid')
             ->alias('a')
@@ -103,7 +105,7 @@ class Category extends Common
             ->join('pics c','c.aid=a.id','LEFT')
             ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
             ->where($map)
-            ->where('istuijian',1)
+            ->where('a.istuijian',1)
             ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
             ->group('a.id')
             ->paginate($num,$count)
