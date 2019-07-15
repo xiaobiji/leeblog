@@ -269,7 +269,7 @@ class Common extends Controller
         return $res;
     }
     /**
-     * 获取右侧标签管理
+     * 获取首页推荐标签
      * @return false|\PDOStatement|string|\think\Collection
      */
     protected function get_tags($limit=''){
@@ -340,7 +340,6 @@ class Common extends Controller
 
 
     //面包屑导航
-
     public function position($cid){//传递当前栏目id
         static $pos=array();//创建接受面包屑导航的数组
         if(empty($pos)){//哦，这个就比较重要了，如果需要把当前栏目也放到面包屑导航中的话就要加上
@@ -449,7 +448,7 @@ class Common extends Controller
     }
 
 
-    //获取指定栏目下所有子栏目id
+    ////获取当前所选栏目下所有子栏目id；
     protected function getAllChildcateIds($categoryID)
     {
         //初始化ID数组
@@ -500,9 +499,6 @@ class Common extends Controller
         $res=db('banner')->where('isshow',1)->order('sort ASC')->field('title,pic,url')->select();
         return $res;
     }
-
-
-
     //获取所有含有chanpin标识栏目中前6个商品
     protected function getchanpin($mark,$num=6){
         $res_pid=db('category')
@@ -511,7 +507,6 @@ class Common extends Controller
             ->order('sort Desc,id asc')
             ->select();
         $pids='';
-
         foreach($res_pid as $k=>$v){
             $pids.=$v['id'].',';
         }
@@ -529,7 +524,6 @@ class Common extends Controller
 
         //获取工程案例信息
         //只取一张图片
-
         foreach ($res as $k=>$v){
             $res[$k]['pic']=explode(',',$v['pic']);
             if(empty($res[$k]['pic'][0])){

@@ -15,20 +15,17 @@ class Index extends Common
             ->limit(6)
             ->select();
         foreach ($six_cates as $k =>$v){
-            //获取当前栏目下所有子栏目id；用于文章查询
+            //获取当前所选栏目下所有子栏目id；用于文章查询
             $vcids = $this->getAllChildcateIds($v['id']);
-            $six_cates[$k]['arts'] = $this->getArticles(7,$vcids);
+            //获取点击选中的栏目下7个文章，按照顶置，添加时间查询
+            $six_cates[$k]['arts'] = $this->get_Cate_Articles(7,$vcids);
         }
-        //获取最新文章
+        //获取全部最新文章
         $articles = $this->getnewarticle(8);
         //获取首页推荐栏目标签
         $indexTagsData=$this->get_tags(5);
-        //获取所有栏目标识
-        $chanpinpids=db('category')
-            ->where('mark','chanpin')
-            ->field('id,name,pid')
-            ->order('sort Desc,id asc')
-            ->select();
+
+        /**企业站中使用此方法  根据栏目标识调出栏目的文章信息
         $chanpin=$this->getchanpin('chanpin',6);
         $xinwen=$this->getchanpin('news',3);
         $anli=$this->getchanpin('anli',3);
@@ -38,6 +35,12 @@ class Index extends Common
             preg_match('/<video.+src=\"?(.+\.(mp4))\"?.+>/i',$v['content'],$match);
             $shipin[$k]['content']=$match[1];
         }
+        //获取所有栏目标识
+        $chanpinpids=db('category')
+            ->where('mark','chanpin')
+            ->field('id,name,pid')
+            ->order('sort Desc,id asc')
+            ->select();
         foreach ($chanpinpids as $k=>$v){
             if($v['pid']==0){
                 unset($chanpinpids[$k]);
@@ -53,10 +56,15 @@ class Index extends Common
         //获取当前栏目下所有子栏目id；用于文章查询
         $chanpincids = $this->getAllChildcateIds($chanpinpid['id']);
         $newchanpin = $this->getArticles(6,$chanpincids);
-        $about=$this->getabout();
-        $huoban=$this->gethuoban();
-        $case = $this->getCase();
+         **/
 
+
+        /**
+         * Lee 企业站需要用到的关于我们，合作伙伴，工程案例等信息
+         *
+         * $about=$this->getabout();
+           $huoban=$this->gethuoban();
+           $case = $this->getCase();
         $res_pid = db('category')->where('mark','xinwen')->field('id')->find();
         $news_id = db('category')->where('pid',$res_pid['id'])->field('id,name')->select();
         //获取手機端导航栏HTML样式
@@ -83,6 +91,7 @@ class Index extends Common
             ->select();
             $this->assign('news_two_info' ,$news_two_info);
         }
+         **/
         //获取网站配置信息
         $config=db('config')->field('config')->find();
         //解码配置信息
@@ -90,31 +99,30 @@ class Index extends Common
         $seo['title']=$config['title'];
         $seo['keyword']=$config['keyword'];
         $seo['desc']=$config['desc'];
-
         $this->assign([
             'six_cates'=>$six_cates,
             'articles'=>$articles,
             'indexTagsData'=>$indexTagsData,
-            'newchanpin'=>$newchanpin,
-            'chanpinpids'=>$chanpinpids,
-            'chanpinDatas'=>$chanpinDatas,
-            'yanfaDatas'=>$yanfaDatas,
-            'anli'=>$anli,
-            'childCate'=>$childCate,
-            'chanpinpid'=>$chanpinpid,
-            'yanfaid'=>$yanfaid,
-            'newsid'=>$newsid,
-            'anliid'=>$anliid,
-            'shipinid'=>$shipinid,
-            'about'=>$about,
-            'chanpin'=>$chanpin,
-            'xinwen'=>$xinwen,
-            'shipin'=>$shipin,
-            'yanfa'=>$yanfa,
-            'huoban'=>$huoban,
-            'case'  =>$case,
-            'news_after_name'=>$news_id,
             'seo'=>$seo
+//            'childCate'=>$childCate,
+//            'about'=>$about,
+//            'newchanpin'=>$newchanpin,
+//            'chanpinpids'=>$chanpinpids,
+//            'chanpinDatas'=>$chanpinDatas,
+//            'yanfaDatas'=>$yanfaDatas,
+//            'anli'=>$anli,
+//            'chanpinpid'=>$chanpinpid,
+//            'yanfaid'=>$yanfaid,
+//            'newsid'=>$newsid,
+//            'anliid'=>$anliid,
+//            'shipinid'=>$shipinid,
+//            'chanpin'=>$chanpin,
+//            'xinwen'=>$xinwen,
+//            'shipin'=>$shipin,
+//            'yanfa'=>$yanfa,
+//            'huoban'=>$huoban,
+//            'case'  =>$case,
+//            'news_after_name'=>$news_id,
         ]);
         return view();
     }
@@ -157,6 +165,41 @@ class Index extends Common
     }
 
 
+    /**
+     * lee首页 轮播图下六个栏目点击显示文章,按照顶置，添加时间查询
+     */
+    protected function get_Cate_Articles($num='10',$id,$notincluderemark='',$where='1,1'){
+
+        if($notincluderemark){
+            $mapb['b.mark'] =  array('neq',$notincluderemark);
+        }else{
+            $mapb='';
+        }
+        $map['a.cid']= array('in',$id);
+        $data = db('article')
+            ->alias('a')
+            ->join('category b','b.id=a.cid')
+            ->join('pics c','c.aid=a.id','LEFT')
+            ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
+            ->where($map)
+            ->where($mapb)
+            ->where("'".$where."'")
+            ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
+            ->group('a.id')
+            ->select();
+        foreach ($data as $k=>$v){
+            $data[$k]['pic']=explode(',',$v['pic']);
+            if(empty($data[$k]['pic'][0])){
+                preg_match ('<img.*src=["](.*?)["].*?>',$data[$k]['content'],$match);
+                if($match){
+                    $data[$k]['pic'][0]='../'.$match[1];
+                }
+            }
+        }
+        return $data;
+    }
+
+    //
     private function getmarkid($a){
         $chanpinpid=db('category')
             ->where('mark',$a)
