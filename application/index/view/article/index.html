@@ -10,6 +10,32 @@
     <link href="__INDEX__/css/m.css" rel="stylesheet">
     <script src="__INDEX__/js/jquery-1.8.3.min.js" ></script>
     <script src="__INDEX__/js/comm.js"></script>
+    <script type="text/javascript" src="/public/static/admin/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+    <link href="/public/static/admin/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript">
+        SyntaxHighlighter.all();
+    </script>
+    <!--<link rel="stylesheet" type="text/css" href="__INDEX__/highlight/styles/tomorrow-night-eighties.css">-->
+    <!--<script type="text/javascript" src="__INDEX__/highlight/highlight.pack.js"></script>-->
+    <!--<script>hljs.initHighlightingOnLoad();</script>-->
+    <!--<script type="text/javascript">-->
+        <!--var allpre = document.getElementsByTagName("pre");-->
+        <!--for(i = 0; i < allpre.length; i++)-->
+        <!--{-->
+            <!--var onepre = document.getElementsByTagName("pre")[i];-->
+            <!--var mycode = document.getElementsByTagName("pre")[i].innerHTML;-->
+            <!--onepre.innerHTML = '<code id="mycode">'+mycode+'</code>';-->
+        <!--}-->
+    <!--</script>-->
+    <!--<style type="text/css">-->
+        <!--#mycode{-->
+            <!--font-size: 18px;-->
+            <!--width:500px;-->
+            <!--white-space: pre; /*不强制换行*/-->
+        <!--}-->
+    <!--</style>-->
+
     <!--[if lt IE 9]>
     <script src="__INDEX__/js/modernizr.js"></script>
 <![endif]-->
@@ -35,7 +61,7 @@
       <p class="bloginfo"><i class="avatar"><img src="__INDEX__/picture/avatar.jpg"></i><span>{$articleData.author}</span><span>{:date('Y-m-d',$articleData.addtime)}</span><span><a href="/category/{$articleData.cid}.html">【{$articleData.cname}】</a></span><span>{$articleData.click}人已围观</span></p>
       <p class="con_info"><b>简介</b>{$articleData.remark}</p>
       <div class="con_text">
-          {$articleData.content}
+         {$articleData.content}
 
 
           {if $articleData.sourceurl}
