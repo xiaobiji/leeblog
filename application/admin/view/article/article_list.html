@@ -35,6 +35,7 @@
         <col width="100">
         <col width="100">
         <col width="100">
+        <col width="100">
         <col width="220">
     </colgroup>
     <thead>
@@ -48,6 +49,7 @@
         <th style="text-align: center;">{$Think.lang.Thum}</th>
         <th style="text-align: center;">{$Think.lang.top}</th>
         <th style="text-align: center;">{$Think.lang.tuijian}</th>
+        <th style="text-align: center;">{$Think.lang.isBaidu}</th>
         <th>{$Think.lang.handle}</th>
     </tr>
     </thead>
@@ -60,10 +62,11 @@
         <td>{$vo.title}</td>
         <td>{$vo.name}</td>
         <td>{$vo.addtime|date="Y/m/d H:i:s",###}</td>
-        <td style="text-align: center;">{$vo.views}</td>
+        <td style="text-align: center;">{$vo.click_num}</td>
         <td style="text-align: center;">{if condition="$vo.pic eq 0"}{$Think.lang.picnone}{else}{$Think.lang.pics} <span class="layui-badge">{$vo.pic}</span>{$Think.lang.copies}{/if}</td>
         <td style="text-align: center;"><input type="checkbox" name="istop" lay-filter="istop" lay-skin="switch" lay-text="{$Think.lang.toptip}" value="{$vo.id}" {$vo.istop?"checked":""}></td>
         <td style="text-align: center;"><input type="checkbox" name="istuijian" lay-filter="istuijian" lay-skin="switch" lay-text="{$Think.lang.tuijiantip}" value="{$vo.id}" {$vo.istuijian?"checked":""}></td>
+        <td style="text-align: center;"><p {$vo['isBaidu'] == '是' ? 'style="color:red"':''}>{$vo.isBaidu}</p></td>
         <td>
             <botton class="layui-btn layui-btn-mini {eq name="vo.pic" value="0"}layui-btn-disabled{/eq} tupian" id="{$vo.id}"><i class="layui-icon">&#xe64a;</i>{$Think.lang.pic}</botton>
             <a href="{:url('article/edit',['id'=>$vo['id']])}" class="layui-btn layui-btn-warm layui-btn-mini"><i class="layui-icon">&#xe642;</i>{$Think.lang.edit}</a>

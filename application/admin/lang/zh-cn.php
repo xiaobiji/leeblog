@@ -111,6 +111,7 @@
         'toptip'=>'置顶|取消',
         'tuijian'=>'是否推荐',
         'tuijiantip'=>'推荐|取消',
+        'isBaidu'=>'百度收录',
         'thum'=>'缩略图',
         'thumtip'=>'请上传缩略图',
         'filetip'=>'请上传文档文件',

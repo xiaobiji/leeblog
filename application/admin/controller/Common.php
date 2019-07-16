@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 
 use think\Controller;
+use think\Request;
 class Common extends Controller
 {
    protected function _initialize()
@@ -122,5 +123,27 @@ class Common extends Controller
             $ip_address = $_SERVER['REMOTE_ADDR'];
         }
         return $ip_address;
+    }
+
+    //检测百度是否收录
+    protected function checkBaidu($url) {
+        $url = 'http://www.baidu.com/s?wd=' . urlencode($url);
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $rs = curl_exec($curl);
+        curl_close($curl);
+        if (!strpos($rs,'没有找到该URL。您可以直接访问') && !strpos($rs,'很抱歉，没有找到与')) { //没有找到说明已被百度收录
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    protected function domain()
+    {
+        //获取当前域名
+        $request = Request::instance();
+        $domain=$request->domain();
+        return $domain;
     }
 }

@@ -29,7 +29,16 @@ class Article extends Common
             ->field('a.*,b.name,count(c.pic) as pic')
             ->where($map)
             ->group('a.id')
-            ->paginate(6,false,['query'=>['cid'=>$cid]]);
+            ->paginate(6,false,['query'=>['cid'=>$cid]])
+            ->each(function ($item,$key){
+                $url=$this->domain()."/article/".$item['id'].".html";
+                if($this->checkBaidu($url)){
+                    $item['isBaidu']='是';
+                }else{
+                    $item['isBaidu']='否';
+                }
+                return $item;
+        });
         $this->assign('list',$res);
         //栏目获取
         $cateall= CateModel::order('sort Desc,id Asc')->select();
