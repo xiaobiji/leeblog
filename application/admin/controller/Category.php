@@ -65,12 +65,30 @@ class Category extends Common
     public function sort(){
         if(request()->isPost()){
             $data=input('post.');
+            p($data);
             if(CateModel::sort($data)){
                 $this->success("排序成功");
             }
             $this->error("操作异常");
         }
     }
+    public function updateSort(){
+        if(request()->isAjax()){
+            $data=input('post.');
+            $cid = $data['cid'];
+            $sort=$data['sort'];
+            $result = CateModel::where('id',$cid)->update(['sort'=>$sort]);
+            if($result){
+                return $this->json(201,'','更改栏目排序成功');
+            }else{
+                return $this->json(202,'','更改失败');
+            }
+        }else{
+            return $this->json(202,'','违法提交');
+        }
+    }
+
+
 
     //栏目编辑
     public function edit($id){

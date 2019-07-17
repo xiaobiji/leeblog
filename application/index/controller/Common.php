@@ -184,6 +184,7 @@ class Common extends Controller
      */
     protected function get_tuijian_articles($limit='5'){
         $where['a.istuijian']=array('=',1);
+        $where['a.is_show']=array('=',1);
         $where['t.isshow']=array('=',1);
         $res=db('article')
             ->alias('a')
@@ -238,10 +239,12 @@ class Common extends Controller
      * @return false|\PDOStatement|string|\think\Collection
      */
     private function get_hot_articles($limit='5'){
+        $map['b.isshow']= array('=',1);
+        $map['a.is_show']= array('=',1);
         $res=db('article')
             ->alias('a')
             ->join('category b','a.cid=b.id','LEFT')
-            ->where('b.isshow',1)
+            ->where($map)
             ->order('a.sort desc,a.id desc')
             ->field('a.id,a.title,a.click_num,a.cmt_count')
             ->limit($limit)
@@ -253,10 +256,12 @@ class Common extends Controller
      * @return false|\PDOStatement|string|\think\Collection
      */
     private function get_click_articles($limit='10'){
+        $map['b.isshow']= array('=',1);
+        $map['a.is_show']= array('=',1);
         $res=db('article')
             ->alias('a')
             ->join('category b','a.cid=b.id','LEFT')
-            ->where('b.isshow',1)
+            ->where($map)
             ->order('click_num desc,id desc')
             ->join('pics c','c.aid=a.id','LEFT')
             ->field('a.id,a.title,a.click_num,a.cmt_count,a.content,GROUP_CONCAT(c.pic) as pic')
@@ -279,10 +284,12 @@ class Common extends Controller
      * @return false|\PDOStatement|string|\think\Collection
      */
     private function get_like_articles($limit='10'){
+        $map['b.isshow']= array('=',1);
+        $map['a.is_show']= array('=',1);
         $res=db('article')
             ->alias('a')
             ->join('category b','a.cid=b.id','LEFT')
-            ->where('b.isshow',1)
+            ->where($map)
             ->order('a.like_num desc,a.id desc')
             ->field('a.id,a.title,a.like_num,a.cmt_count')
             ->limit($limit)
@@ -448,7 +455,7 @@ class Common extends Controller
         }
         $map['a.cid']= array('in',$id);
         $map['b.isshow']= array('=',1);
-
+        $map['a.is_show']= array('=',1);
         $res=db('article')
             ->join('category b','b.id=a.cid')
             ->alias('a')
@@ -548,6 +555,7 @@ class Common extends Controller
         }
         $pids =substr($pids,0,strlen($pids)-1);
         $where['a.cid']=array('in',$pids);
+        $where['a.is_show']= array('=',1);
         $res = db('article')
             ->alias('a')
             ->join('pics b','b.aid=a.id','left')

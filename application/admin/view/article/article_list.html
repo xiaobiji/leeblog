@@ -37,6 +37,7 @@
         <col width="100">
         <col width="100">
         <col width="100">
+        <col width="100">
         <col width="220">
     </colgroup>
     <thead>
@@ -50,6 +51,7 @@
         <th style="text-align: center;">{$Think.lang.Thum}</th>
         <th style="text-align: center;">{$Think.lang.top}</th>
         <th style="text-align: center;">{$Think.lang.tuijian}</th>
+        <th style="text-align: center;">{$Think.lang.isshow}</th>
         <th style="text-align: center;">{$Think.lang.isBaidu}</th>
         <th>{$Think.lang.handle}</th>
     </tr>
@@ -67,6 +69,7 @@
         <td style="text-align: center;">{if condition="$vo.pic eq 0"}{$Think.lang.picnone}{else}{$Think.lang.pics} <span class="layui-badge">{$vo.pic}</span>{$Think.lang.copies}{/if}</td>
         <td style="text-align: center;"><input type="checkbox" name="istop" lay-filter="istop" lay-skin="switch" lay-text="{$Think.lang.toptip}" value="{$vo.id}" {$vo.istop?"checked":""}></td>
         <td style="text-align: center;"><input type="checkbox" name="istuijian" lay-filter="istuijian" lay-skin="switch" lay-text="{$Think.lang.tuijiantip}" value="{$vo.id}" {$vo.istuijian?"checked":""}></td>
+        <td style="text-align: center;"><input type="checkbox" name="is_show" lay-filter="is_show" lay-skin="switch" lay-text="{$Think.lang.isshowtip}" value="{$vo.id}" {$vo.is_show?"checked":""}></td>
         <td style="text-align: center;"><p {$vo['is_baidu'] == '1' ? 'style="color:red"':''}>{$vo['is_baidu'] == '1' ? '是':'否'}</p></td>
         <td>
             <botton class="layui-btn layui-btn-mini {eq name="vo.pic" value="0"}layui-btn-disabled{/eq} tupian" id="{$vo.id}"><i class="layui-icon">&#xe64a;</i>{$Think.lang.pic}</botton>
@@ -113,7 +116,8 @@
                 'datatype':'json',
                 success:function (msg) {
                     layer.msg(msg.msg,{time:1000},function () {
-                        location.href="{:url('admin/article/index')}";
+                        return false;
+//                        location.href="{:url('admin/article/index')}";
                     });
                 }
             });
@@ -128,7 +132,24 @@
                 'datatype':'json',
                 success:function (msg) {
                     layer.msg(msg.msg,{time:1000},function () {
-                        location.href="{:url('admin/article/index')}";
+                        return false;
+//                        location.href="{:url('admin/article/index')}";
+                    });
+                }
+            });
+        });
+        form.on('switch(is_show)', function(data){
+            var is_show=data.elem.checked;
+            var id=data.value;
+            $.ajax({
+                'type':'post',
+                'url':"{:url('admin/article/isshow')}",
+                'data':{'id':id,'is_show':is_show},
+                'datatype':'json',
+                success:function (msg) {
+                    layer.msg(msg.msg,{time:1000},function () {
+                        return false;
+//                        location.href="{:url('admin/article/index')}";
                     });
                 }
             });

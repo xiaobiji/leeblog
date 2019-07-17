@@ -29,11 +29,15 @@ class Search extends Common
                 $childCate[$k]['articles'] = $this->getArticles(10,$vcids);
             }
             $where['a.title'] = array('like','%'.$keywords.'%');
+            $where['b.isshow']= array('=',1);
+            $where['a.is_show']= array('=',1);
             $style = 'none';
             //获取左侧导航栏HTML样式
 //            $childCate = $this->getLfetMenuHtml($childCate,'',$style);
             $res = Db::name('article')
-                ->where('title','like','%'.$keywords.'%')
+                ->alias('a')
+                ->join('category b','b.id=a.cid')
+                ->where($where)
                 ->select();
             $count = count($res);
             $articles = Db::name('article')
@@ -89,17 +93,22 @@ class Search extends Common
                 ->where('id',$keywords)
                 ->field('id,tname')
                 ->find();
+            $where['a.title'] = array('like','%'.$keywords.'%');
+            $where['b.isshow']= array('=',1);
+            $where['a.is_show']= array('=',1);
             $res = Db::name('article')
-                ->where('keyword','like','%'.$tdata['id'].'%')
+                ->alias('a')
+                ->join('category b','b.id=a.cid')
+//                ->where('keyword','like','%'.$tdata['id'].'%')
+                ->where($where)
                 ->select();
-
             $count = count($res);
-
             $articles = Db::name('article')
                 ->alias('a')
                 ->join('category b','b.id=a.cid')
                 ->join('pics c','c.aid=a.id','LEFT')
-                ->where('a.keyword','like','%'.$tdata['id'].'%')
+//                ->where('a.keyword','like','%'.$tdata['id'].'%')
+                ->where($where)
                 ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
                 ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.desc,a.thumb,a.author,a.addtime,a.content,a.remark,b.mark,GROUP_CONCAT(c.pic) as pic,b.name as cname')
                 ->group('a.id')

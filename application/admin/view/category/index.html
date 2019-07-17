@@ -44,9 +44,9 @@
         </td>
         <td>{$vo.id}</td>
         <td><a href="{:url('article/index',['cid'=>$vo['id']])}">{$vo.name}</a></td>
-        <td><input type="text" name="{$vo.id}" value="{$vo.sort}" style="width: 70px; height: 25px;" class="layui-input"></td>
+        <td><input type="text" name="{$vo.id}" value="{$vo.sort}" style="width: 70px; height: 25px;" class="layui-input"  oninput="updateSort(this);" onpropertychange="updateSort(this.id);"></td>
         <td><a href="{eq name='vo.is_addarticle' value='0'}javascript:;{else/}{:url('article/add',['cid'=>$vo['id']])}{/eq}" class="layui-btn {eq name='vo.is_addarticle' value='0'}layui-btn-disabled {/eq} layui-btn-mini"><i class="layui-icon">&#xe654;</i>添加文章</a></td>
-        <td><a href="{:url('category/edit',['id'=>$vo['id']])}" class="layui-btn layui-btn-warm layui-btn-mini"><i class="layui-icon">&#xe642;</i>编辑</a><a href="{:url('category/del',['id'=>$vo.id])}" class="layui-btn layui-btn-danger layui-btn-mini del"><i class="layui-icon">&#xe640;</i>删除</a></td>
+        <td><a href="/category/{$vo.id}.html" class="layui-btn layui-btn-normal layui-btn-mini" target="_blank">查看</a><a href="{:url('category/edit',['id'=>$vo['id']])}" class="layui-btn layui-btn-warm layui-btn-mini"><i class="layui-icon">&#xe642;</i>编辑</a><a href="{:url('category/del',['id'=>$vo.id])}" class="layui-btn layui-btn-danger layui-btn-mini del"><i class="layui-icon">&#xe640;</i>删除</a></td>
     </tr>
     {/volist}
     </tbody>
@@ -100,6 +100,21 @@
         $('tr[pid='+pid+']').find('.shensuo').find('i').text("+");
 
     }
+    function  updateSort(obj) {
+        setTimeout(function(){  //使用  setTimeout（）方法设定定时2000毫秒
+            var cid = obj.name;
+            var sort = obj.value;
+            $.ajax({
+                type: "POST",
+                url: "/admin/category/updateSort",
+                data: {cid:cid, sort:sort},
+                dataType: "json",
+                success: function(data){
+                }
+            });
+        },2000);
+    }
+
 </script>
 </body>
 </html>

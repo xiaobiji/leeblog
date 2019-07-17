@@ -92,6 +92,7 @@ class Category extends Common
      */
     protected function getcateArticles($num='10',$id){
         $map['a.cid']= array('in',$id);
+        $map['a.is_show']= array('=',1);
         $map['b.isshow']= array('=',1);
         $res=db('article')
             ->join('category b','b.id=a.cid')

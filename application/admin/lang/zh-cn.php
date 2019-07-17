@@ -111,6 +111,8 @@
         'toptip'=>'置顶|取消',
         'tuijian'=>'是否推荐',
         'tuijiantip'=>'推荐|取消',
+        'isshow'=>'是否显示',
+        'isshowtip'=>'显示|隐藏',
         'isBaidu'=>'百度收录',
         'thum'=>'缩略图',
         'thumtip'=>'请上传缩略图',

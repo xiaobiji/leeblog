@@ -20,6 +20,7 @@ class Article extends Common
     {
         $map['b.isshow']=array('=',1);
         $map['a.id']=array('=',$id);
+        $map['a.is_show']= array('=',1);
         //获取当前文章信息
         $articleData=Db::name('article')
             ->alias('a')
@@ -82,12 +83,8 @@ class Article extends Common
         //获取随机文章
         $suijiData =$this->getRandArticle(4);
         //根据标签获取相关文章
-        $xiangguanData = Db::name('article')
-            ->where('keyword','in',$articleData['keyword'])
-            ->where('id','neq',$articleData['id'])
-            ->limit(4)
-            ->field('title,id')
-            ->select();
+        $xiangguanData = $this->getTagArticles($id,$articleData['keyword']);
+
         //获取标签名称
         $keywords_id = explode(",",$articleData['keyword']);
         $keywords=[];
@@ -218,32 +215,69 @@ class Article extends Common
     }
 
     /**
+     * lee根据标签来查询相关文章
+     */
+    private function getTagArticles($aid,$keywords){
+        $map['b.isshow']= array('=',1);
+        $map['a.is_show']= array('=',1);
+        $map['a.keyword']= array('in',$keywords);
+        $map['a.id']= array('neq',$aid);
+        //获取当前文章信息
+        $xiangguanArticle=Db::name('article')
+            ->alias('a')
+            ->join('category b','a.cid=b.id','LEFT')
+            ->join('pics c','c.aid=a.id','LEFT')
+            ->where($map)
+            ->limit(4)
+            ->field('a.title,a.id,GROUP_CONCAT(c.pic) as pic,a.content')
+            ->select();
+        foreach ($xiangguanArticle as $k=>$v){
+            $xiangguanArticle[$k]['pic']=explode(',',$v['pic']);
+            if(empty($xiangguanArticle[$k]['pic'][0])){
+                preg_match ('<img.*src=["](.*?)["].*?>',$xiangguanArticle[$k]['content'],$match);
+                if($match){
+                    $xiangguanArticle[$k]['pic'][0]='../'.$match[1];
+                }
+            }
+        }
+        return $xiangguanArticle;
+    }
+    /**
      * lee获取栏目页文章,按照发布时间排序
      */
     private function getTuijianArticle($num='4',$cid,$id){
         $map['a.cid']= array('in',$cid);
         $map['a.id']= array('neq',$id);
+        $map['b.isshow']= array('=',1);
+        $map['a.is_show']= array('=',1);
         //获取当前文章信息
         $tuijianArticle=Db::name('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
+            ->join('category b','a.cid=b.id','LEFT')
             ->where($map)
             ->where('a.id')
             ->order('a.istop desc,a.toptime Desc,a.addtime Desc')
             ->limit($num)
             ->field('a.id,a.title,GROUP_CONCAT(c.pic) as pic')
             ->select();
-            foreach ($tuijianArticle as $k=>$v){
-                $tuijianArticle[$k]['pic']=explode(',',$v['pic']);
-            };
+        foreach ($tuijianArticle as $k=>$v){
+            $tuijianArticle[$k]['pic']=explode(',',$v['pic']);
+        };
         return $tuijianArticle;
     }
-
+    /**
+     * lee获取随机文章,按照发布时间排序
+     */
     private function getRandArticle($num){
+        $map['a.is_show']= array('=',1);
+        $map['b.isshow']= array('=',1);
         //获取随机文章
         $res =Db::name('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
+            ->join('category b','a.cid=b.id','LEFT')
+            ->where($map)
             ->orderRaw('rand()')
             ->field('a.id,a.title,a.content,a.remark,GROUP_CONCAT(c.pic) as pic')
             ->group('a.id')
@@ -268,6 +302,8 @@ class Article extends Common
      */
     protected function getcateArticles($num='10',$id){
         $map['a.cid']= array('in',$id);
+        $map['b.isshow']= array('=',1);
+        $map['a.is_show']= array('=',1);
         $res=db('article')
             ->join('category b','b.id=a.cid')
             ->alias('a')

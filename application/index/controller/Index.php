@@ -138,11 +138,13 @@ class Index extends Common
      * lee添加首页获取所有文章,按照顶置文章->发布时间排序
      */
     private function getnewarticle($num='10'){
+        $map['b.isshow']= array('=',1);
+        $map['a.is_show']= array('=',1);
         $res=Db::name('article')
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
             ->join('category b','a.cid=b.id','LEFT')
-            ->where('b.isshow',1)
+            ->where($map)
             ->field('a.id')
             ->select();
         $count = count($res);
@@ -150,7 +152,7 @@ class Index extends Common
             ->alias('a')
             ->join('pics c','c.aid=a.id','LEFT')
             ->join('category b','a.cid=b.id','LEFT')
-            ->where('b.isshow',1)
+            ->where($map)
             ->order('a.toptime desc,a.addtime Desc')
             ->field('a.id,a.title,a.istop,a.istuijian,a.cid,a.remark,a.thumb,a.addtime,a.content,GROUP_CONCAT(c.pic) as pic,b.name as cname')
             ->group('a.id')
@@ -181,6 +183,7 @@ class Index extends Common
         }
         $map['a.cid']= array('in',$id);
         $map['b.isshow']= array('=',1);
+        $map['a.is_show']= array('=',1);
         $data = db('article')
             ->alias('a')
             ->join('category b','b.id=a.cid')

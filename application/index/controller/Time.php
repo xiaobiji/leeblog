@@ -14,16 +14,18 @@ class Time extends Common
 
     public function index()
     {
+        $where['b.isshow']= array('=',1);
+        $where['a.is_show']= array('=',1);
         $res=db('article')
             ->alias('a')
             ->join('category b','b.id=a.cid')
-            ->where('b.isshow',1)
+            ->where($where)
             ->select();
         $count = count($res);
         $data = db('article')
             ->alias('a')
             ->join('category b','b.id=a.cid')
-            ->where('b.isshow',1)
+            ->where($where)
             ->order('a.addtime Desc')
             ->field('a.id,a.title,a.addtime')
             ->group('a.id')
