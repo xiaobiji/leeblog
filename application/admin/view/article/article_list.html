@@ -13,6 +13,7 @@
 <div>
     <a href="{:url('article/add')}" class="layui-btn layui-btn-normal">{$Think.lang.contentadd}</a>
     <button type="submit" class="layui-btn layui-btn-danger">{$Think.lang.delall}</button>
+    <a href="{:url('article/baidu')}" class="layui-btn layui-btn-primary">查询{$Think.lang.isBaidu}</a>
     <div class="layui-form-item" style="float: right;">
         <label class="layui-form-label">{$Think.lang.selectdepID}</label>
         <div class="layui-input-inline">
@@ -66,7 +67,7 @@
         <td style="text-align: center;">{if condition="$vo.pic eq 0"}{$Think.lang.picnone}{else}{$Think.lang.pics} <span class="layui-badge">{$vo.pic}</span>{$Think.lang.copies}{/if}</td>
         <td style="text-align: center;"><input type="checkbox" name="istop" lay-filter="istop" lay-skin="switch" lay-text="{$Think.lang.toptip}" value="{$vo.id}" {$vo.istop?"checked":""}></td>
         <td style="text-align: center;"><input type="checkbox" name="istuijian" lay-filter="istuijian" lay-skin="switch" lay-text="{$Think.lang.tuijiantip}" value="{$vo.id}" {$vo.istuijian?"checked":""}></td>
-        <td style="text-align: center;"><p {$vo['isBaidu'] == '是' ? 'style="color:red"':''}>{$vo.isBaidu}</p></td>
+        <td style="text-align: center;"><p {$vo['is_baidu'] == '1' ? 'style="color:red"':''}>{$vo['is_baidu'] == '1' ? '是':'否'}</p></td>
         <td>
             <botton class="layui-btn layui-btn-mini {eq name="vo.pic" value="0"}layui-btn-disabled{/eq} tupian" id="{$vo.id}"><i class="layui-icon">&#xe64a;</i>{$Think.lang.pic}</botton>
             <a href="{:url('article/edit',['id'=>$vo['id']])}" class="layui-btn layui-btn-warm layui-btn-mini"><i class="layui-icon">&#xe642;</i>{$Think.lang.edit}</a>

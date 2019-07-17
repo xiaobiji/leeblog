@@ -9,6 +9,7 @@ namespace app\admin\controller;
 use app\admin\model\Category as CateModel;
 use app\admin\model\Tags;
 use think\Lang;
+use think\Db;
 class Article extends Common
 {
 
@@ -29,16 +30,8 @@ class Article extends Common
             ->field('a.*,b.name,count(c.pic) as pic')
             ->where($map)
             ->group('a.id')
-            ->paginate(6,false,['query'=>['cid'=>$cid]])
-            ->each(function ($item,$key){
-                $url=$this->domain()."/article/".$item['id'].".html";
-                if($this->checkBaidu($url)){
-                    $item['isBaidu']='是';
-                }else{
-                    $item['isBaidu']='否';
-                }
-                return $item;
-        });
+            ->paginate(6,false,['query'=>['cid'=>$cid]]);
+
         $this->assign('list',$res);
         //栏目获取
         $cateall= CateModel::order('sort Desc,id Asc')->select();
@@ -47,6 +40,21 @@ class Article extends Common
         $this->assign('cid',$cid);
         return view('article_list');
     }
+    public function baidu(){
+        $res=db('article')
+            ->field('id')
+            ->select();
+        foreach ($res as $k=>$v){
+            $url=$this->domain()."/article/".$res[$k]['id'].".html";
+            if($this->checkBaidu($url)){
+                Db::execute("update lee_article set is_baidu=1 where id=".$res[$k]['id']);
+            }else{
+                Db::execute("update lee_article set is_baidu=0 where id=".$res[$k]['id']);
+            }
+        }
+        $this->success('成功更新百度收录状态');
+    }
+
     //内容添加
     public function add($cid=''){
         if(request()->isPost()){
