@@ -552,7 +552,9 @@ class App
         // 获取控制器名
         $controller = strip_tags($result[1] ?: $config['default_controller']);
         $controller = $convert ? strtolower($controller) : $controller;
-
+        if (!preg_match('/^[A-Za-z](\w|\.)*$/', $controller)) {
+            throw new HttpException(404, 'controller not exists:' . $controller);
+        }
         // 获取操作名
         $actionName = strip_tags($result[2] ?: $config['default_action']);
         if (!empty($config['action_convert'])) {
@@ -560,6 +562,7 @@ class App
         } else {
             $actionName = $convert ? strtolower($actionName) : $actionName;
         }
+
 
         // 设置当前请求的控制器、操作
         $request->controller(Loader::parseName($controller, 1))->action($actionName);
