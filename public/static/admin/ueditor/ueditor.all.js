@@ -9965,6 +9965,7 @@ var LocalStorage = UE.LocalStorage = (function () {
 ///plugin 编辑器默认的过滤转换机制
 
 UE.plugins['defaultfilter'] = function () {
+    return;
     var me = this;
     me.setOpt({
         'allowDivTransToP':true,
@@ -10234,7 +10235,6 @@ UE.commands['inserthtml'] = {
         range = me.selection.getRange();
         div = range.document.createElement( 'div' );
         div.style.display = 'inline';
-
         if (!notNeedFilter) {
             var root = UE.htmlparser(html);
             //如果给了过滤规则就先进行过滤

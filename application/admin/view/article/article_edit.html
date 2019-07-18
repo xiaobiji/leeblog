@@ -172,7 +172,11 @@
 <script type="text/javascript" src="/public/static/admin/ueditor/ueditor.all.js"></script>
 <script src="/public/static/admin/custom/js/admin.js"></script>
 <script>
-    var ue = UE.getEditor('content');
+    var ue = UE.getEditor('content',{
+        autoSyncData:true
+            }
+        );
+
     layui.use(['form','upload'], function(){
         var form = layui.form;
         var upload = layui.upload;
