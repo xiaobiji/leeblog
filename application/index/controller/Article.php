@@ -147,6 +147,7 @@ class Article extends Common
 
         $yanfa=$this->getchanpin('yanfa',8);
 
+        $islike = $this->islike($id);
         $this->assign([
             'childCate'=>$childCate,
             'tuijianArticle'=>$tuijianArticle,
@@ -159,6 +160,7 @@ class Article extends Common
             'after'=>$after,
             'keyData'=>$articleData['keyword'],
             'yanfa'=>$yanfa,
+            'islike'=>$islike,
             'seo'=>$seo
         ]);
 
@@ -166,8 +168,32 @@ class Article extends Common
         return $this->fetch($art_template['art_template']);
     }
 
-    public function like(){
 
+    public function islike($aid){
+        $ip = $this->getip();
+        $uname = session('username');
+        $whereip['ip']=array('eq',$ip);
+        $whereip['aid']=array('eq',$aid);
+        $likeip =  $likeData = Db::name('articlelike')
+            ->where($whereip)
+            ->field('id,uname,ip')
+            ->find();
+
+        $whereuname['uname']=array('eq',$uname);
+        $whereuname['aid']=array('eq',$aid);
+        $likeuname = Db::name('articlelike')
+            ->where($whereuname)
+            ->field('id,uname,ip')
+            ->find();
+        if($likeuname['id']){
+            return 1;
+        }
+        if($likeip['id']){
+            return 1;
+        }
+        return 0;
+    }
+    public function like(){
         if(request()->isAjax()){
             $aid = $_REQUEST['aid'];
             if($aid){
@@ -180,7 +206,7 @@ class Article extends Common
                     ->field('id,uname,ip')
                     ->find();
 
-                $whereuname['ip']=array('eq',$ip);
+                $whereuname['uname']=array('eq',$uname);
                 $whereuname['aid']=array('eq',$aid);
                 $likeuname = Db::name('articlelike')
                     ->where($whereuname)

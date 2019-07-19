@@ -81,7 +81,7 @@
         <p>
             <span class="diggit">
                 <a href="javascript:;" onclick="articlelike({$articleData.id})">
-                    很赞哦！
+                    <span id="zan">{if $islike}已经赞了哦！{else/}很赞哦{/if}</span>
                 </a>
 
                 (<b id="diggnum">{$articleData.likenum}</b>)
@@ -103,7 +103,9 @@
                             var data = result;
                             if(data.code==201){
                                 $('#diggnum').html();
+                                $('#zan').html();
                                 $('#diggnum').html(Number(diggnum)+Number(1));
+                                $('#zan').html('已经赞了哦');
                                 return false;
                             }else{
                                 return false;
