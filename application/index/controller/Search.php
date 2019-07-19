@@ -93,7 +93,7 @@ class Search extends Common
                 ->where('id',$keywords)
                 ->field('id,tname')
                 ->find();
-            $where['a.title'] = array('like','%'.$keywords.'%');
+            $where['a.keyword'] = array('like','%'.$keywords.'%');
             $where['b.isshow']= array('=',1);
             $where['a.is_show']= array('=',1);
             $res = Db::name('article')
