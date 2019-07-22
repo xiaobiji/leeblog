@@ -66,13 +66,11 @@ class Article extends Common
             Db::name('article')->where('id',$id)->update(['click_num'=>$articleData['click']]);
         }
         $res=db('click')
-            ->alias('c')
-            ->join('article a','a.id=c.aid','left')
-            ->field('count(c.aid) as click')
+            ->where('aid',$id)
+            ->field('count(id) as click')
             ->find();
-        $articleData['click'] = count($res['click']);
+        $articleData['click'] = $res['click'];
         //添加浏览量，点击量 判断浏览ip  结束
-
 
         //获取ci文章栏目的文章模板
         $art_template = Db::name('category')
