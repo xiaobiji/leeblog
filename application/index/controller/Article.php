@@ -70,7 +70,7 @@ class Article extends Common
             ->join('article a','c.aid=a.id')
             ->field('count(c.aid) as click')
             ->find();
-        $articleData['click'] = count($res);
+        $articleData['click'] = count($res['click']);
         //添加浏览量，点击量 判断浏览ip  结束
 
 
