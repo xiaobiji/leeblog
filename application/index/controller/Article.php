@@ -63,7 +63,7 @@ class Article extends Common
             $click['num']=$clickData['num']+1;
             $click['ip']=$ip;
             model('Click')->allowField(true)->save($click);
-            Db::name('article')->where('id',$id)->update(['click_num'=>$articleData['click']]);
+//            Db::name('article')->where('id',$id)->update(['click_num'=>$articleData['click']]);
         }
         $res=db('click')
             ->where('aid',$id)
