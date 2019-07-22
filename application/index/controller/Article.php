@@ -68,7 +68,7 @@ class Article extends Common
         $res=db('click')
             ->alias('c')
             ->join('article a','c.aid=a.id')
-            ->field('count(c.id) as click')
+            ->field('count(c.aid) as click')
             ->find();
         $articleData['click'] = count($res);
         //添加浏览量，点击量 判断浏览ip  结束
