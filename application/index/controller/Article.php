@@ -63,9 +63,14 @@ class Article extends Common
             $click['num']=$clickData['num']+1;
             $click['ip']=$ip;
             model('Click')->allowField(true)->save($click);
-            $articleData['click'] = $articleData['click']+1;
             Db::name('article')->where('id',$id)->update(['click_num'=>$articleData['click']]);
         }
+        $res=db('click')
+            ->alias('c')
+            ->join('article a','c.aid=a.id')
+            ->field('count(c.id) as click')
+            ->find();
+        $articleData['click'] = count($res);
         //添加浏览量，点击量 判断浏览ip  结束
 
 
