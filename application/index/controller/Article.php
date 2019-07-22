@@ -67,7 +67,7 @@ class Article extends Common
         }
         $res=db('click')
             ->alias('c')
-            ->join('article a','c.aid=a.id')
+            ->join('article a','a.id=c.aid','left')
             ->field('count(c.aid) as click')
             ->find();
         $articleData['click'] = count($res['click']);
