@@ -8,7 +8,6 @@ class Index extends Common
     public function index()
     {
         //获取首页排序值前6的栏目，并分别获取里面7个文章
-        $where['pid']=
         $six_cates = $chanpinpids=db('category')
             ->where('isshow',1)
             ->field('id,name,sort')
