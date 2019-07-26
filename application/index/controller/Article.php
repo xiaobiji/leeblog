@@ -108,14 +108,24 @@ class Article extends Common
         //面包屑导航
         $position = $this->position($articleData['cid']);
         //上一篇
+        $mapfront['b.isshow']=array('=',1);
+        $mapfront['a.id']=array('<',$id);
+        $mapfront['a.is_show']= array('=',1);
         $front=Db::name('article')
-            ->where("id<".$id)
-            ->order('id desc')
-            ->limit('1')
-            ->find();
+                ->alias('a')
+                ->join('category b','b.id=a.cid','LEFT')
+                ->where($mapfront)
+                ->order('id desc')
+                ->limit('1')
+                ->find();
         //下一篇
+        $mapafter['b.isshow']=array('=',1);
+        $mapafter['a.id']=array('>',$id);
+        $mapafter['a.is_show']= array('=',1);
         $after=Db::name('article')
-            ->where("id>".$id)
+            ->alias('a')
+            ->join('category b','b.id=a.cid','LEFT')
+            ->where($mapafter)
             ->order('id asc')
             ->limit('1')
             ->find();
