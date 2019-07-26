@@ -38,6 +38,7 @@
         <col width="100">
         <col width="100">
         <col width="100">
+        <col width="50">
         <col width="220">
     </colgroup>
     <thead>
@@ -53,6 +54,7 @@
         <th style="text-align: center;">{$Think.lang.tuijian}</th>
         <th style="text-align: center;">{$Think.lang.isshow}</th>
         <th style="text-align: center;">{$Think.lang.isBaidu}</th>
+        <th style="text-align: center;">预览</th>
         <th>{$Think.lang.handle}</th>
     </tr>
     </thead>
@@ -71,6 +73,7 @@
         <td style="text-align: center;"><input type="checkbox" name="istuijian" lay-filter="istuijian" lay-skin="switch" lay-text="{$Think.lang.tuijiantip}" value="{$vo.id}" {$vo.istuijian?"checked":""}></td>
         <td style="text-align: center;"><input type="checkbox" name="is_show" lay-filter="is_show" lay-skin="switch" lay-text="{$Think.lang.isshowtip}" value="{$vo.id}" {$vo.is_show?"checked":""}></td>
         <td style="text-align: center;"><p {$vo['is_baidu'] == '1' ? 'style="color:red"':''}>{$vo['is_baidu'] == '1' ? '是':'否'}</p></td>
+        <td style="text-align: center;"><a class="layui-btn layui-btn-mini" href="/article/{$vo.id}.html" target="_blank">预览</a></td>
         <td>
             <botton class="layui-btn layui-btn-mini {eq name="vo.pic" value="0"}layui-btn-disabled{/eq} tupian" id="{$vo.id}"><i class="layui-icon">&#xe64a;</i>{$Think.lang.pic}</botton>
             <a href="{:url('article/edit',['id'=>$vo['id']])}" class="layui-btn layui-btn-warm layui-btn-mini"><i class="layui-icon">&#xe642;</i>{$Think.lang.edit}</a>
