@@ -115,7 +115,7 @@ class Article extends Common
                 ->alias('a')
                 ->join('category b','b.id=a.cid','LEFT')
                 ->where($mapfront)
-                ->order('id desc')
+                ->order('a.id desc')
                 ->limit('1')
                 ->find();
         //下一篇
@@ -126,7 +126,7 @@ class Article extends Common
             ->alias('a')
             ->join('category b','b.id=a.cid','LEFT')
             ->where($mapafter)
-            ->order('id asc')
+            ->order('a.id asc')
             ->limit('1')
             ->find();
 
