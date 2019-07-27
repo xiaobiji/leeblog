@@ -131,7 +131,6 @@ class Article extends Common
             ->order('a.id asc')
             ->limit('1')
             ->find();
-
         //查询当前栏目下所有子栏目
         $childCate = $this->getChildCate($articleData['cid']);
         $style='block';
