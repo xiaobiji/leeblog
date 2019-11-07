@@ -43,9 +43,9 @@ class Tags extends Common
     {
         if(request()->isPost()){
             $data = input('post.');
-            if(!isset($data['is_show'])){
-                $data['is_show']=0;
-            }
+//            if(!isset($data['is_show'])){
+//                $data['is_show']=0;
+//            }
             //列新栏目数据
             if(TagsModel::where('id',$id)->update($data)){
                 $this->success("更新成功",'tags/index');
