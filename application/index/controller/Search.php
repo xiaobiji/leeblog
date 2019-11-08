@@ -93,7 +93,8 @@ class Search extends Common
                 ->where('id',$keywords)
                 ->field('id,tname')
                 ->find();
-            $where['a.keyword'] = array('like','%'.$keywords.'%');
+//            $where['a.keyword'] = array('like','%'.$keywords.'%');
+            $where[] = ['exp',Db::raw("FIND_IN_SET($keywords,a.keyword)")];
             $where['b.isshow']= array('=',1);
             $where['a.is_show']= array('=',1);
             $res = Db::name('article')
