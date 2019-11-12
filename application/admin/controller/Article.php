@@ -85,7 +85,12 @@ class Article extends Common
             if (!isset($data['keyword'])) {
                 $data['keyword'] = '';
             }
-
+            if(empty($data['desc'])){
+                $data['desc'] = mb_substr(cutstr_html($data['content']),0,200);
+            }
+            if(empty($data['remark'])){
+                $data['remark'] = mb_substr(cutstr_html($data['content']),0,200);
+            }
             $data['cid'];
             //后端数据验证
             $validate = validate('Article');
@@ -151,6 +156,13 @@ class Article extends Common
             if (!isset($data['keyword'])) {
                 $data['keyword'] = '';
             }
+            if(empty($data['desc'])){
+                $data['desc'] = mb_substr(cutstr_html($data['content']),0,200);
+            }
+            if(empty($data['remark'])){
+                $data['remark'] = mb_substr(cutstr_html($data['content']),0,200);
+            }
+
             //后端数据验证
             $validate = validate('Article');
             if (!$validate->check($data)) {

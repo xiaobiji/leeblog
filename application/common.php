@@ -124,6 +124,14 @@ function getbanner($curid){
     return $res['pic'];
 }
 
+//lee 添加去除HTML代码与空行，空格函数，作为详情内容描述
+function cutstr_html($string){
+    $string = strip_tags($string);
+    $string = str_replace(PHP_EOL, '',  $string);
+    $string = str_replace(array("&nbsp;", "&ensp;", "&emsp;","&thinsp;","&zwnj;","&zwj;","&ldquo;","&rdquo;"), "", $string);
+    return $string;
+}
+
 /**
  * Lee打印函数
  */
