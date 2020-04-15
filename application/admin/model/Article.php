@@ -57,4 +57,7 @@ class Article extends Model
             }
         });
     }
+    public function getOne(array $where,$field='*'){
+        return Db('article')->where($where)->field($field)->find();
+    }
 }

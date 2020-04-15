@@ -233,14 +233,12 @@ class Article extends Common
                 if($likeip['id']){
                     return $this->json(203,'','已经点赞');
                 }
-
                 $data['ip']=$ip;
                 $data['aid']= $aid;
                 $data['uname']= $uname;
                 $data['like_time']= time();
                 $res = Db::name('articlelike')->insert($data);
                 if($res){
-
                     return $this->json(201,'','点赞成功');
                 }else{
                     return $this->json(204,'','点赞失败');
