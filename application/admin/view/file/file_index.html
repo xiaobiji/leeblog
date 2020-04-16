@@ -42,13 +42,13 @@
 </head>
 <body style="padding:15px;">
 <div class="head-top">
-	<a  href="?currdir={$curdir|iconv='GB2312','UTF-8',###}\.." class="layui-btn layui-btn-sm layui-btn-primary">
+	<a  href="?currdir={$curdir|iconv='GB2312','UTF-8//TRANSLIT//IGNORE',###}\.." class="layui-btn layui-btn-sm layui-btn-primary">
 	  <i class="layui-icon">上级目录</i>
 	</a>
 	<button class="layui-btn layui-btn-sm layui-btn-primary" id="reload">
 	  <i class="layui-icon">&#x1002;</i>
 	</button>
-	<button class="layui-btn layui-btn-sm layui-btn-danger">当前路径：{$curdir|iconv='GB2312','UTF-8',###}</button>
+	<button class="layui-btn layui-btn-sm layui-btn-danger">当前路径：{$curdir|iconv='GB2312','UTF-8//TRANSLIT//IGNORE',###}</button>
 	<span class="layui-btn layui-btn-sm layui-btn-success" style="float:right;">共{$num.dir}个目录，{$num.file}个文件</span>
 </div>
 <div class="file-list">
@@ -70,7 +70,7 @@
 			  <svg class="my-icon" aria-hidden="true">
 				  <use xlink:href="{$v.icon}"></use>
 			  </svg>
-			  <a href="{$v.flag?'?currdir='.$v.currdir:'javascript:;'}">{$v.name|iconv='GB2312','UTF-8',###}</a>
+			  <a href="{$v.flag?'?currdir='.$v.currdir:'javascript:;'}">{$v.name|iconv='GB2312//TRANSLIT//IGNORE','UTF-8',###}</a>
 		  </td>
 		  <td>{$v.flag?"目录":size_format($v.size,2)}</td>
 			<?php $p=urlencode($v['currdir']);?>
@@ -116,7 +116,7 @@
 					//首次不执行
 					if(!first){
 						//do something
-						<?php $path=iconv('GB2312','UTF-8',$curdir.DIRECTORY_SEPARATOR);?>
+						<?php $path=iconv('GB2312','UTF-8//TRANSLIT//IGNORE',$curdir.DIRECTORY_SEPARATOR);?>
 						location.href="?&currdir={$path|urlencode=###}&page="+obj.curr;
 					}
 				}

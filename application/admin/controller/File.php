@@ -39,7 +39,7 @@ class File extends Common
                     $arr['flag']=0;
                     $num['file']++;
                 }
-                $arr['currdir']=iconv('GB2312','UTF-8',getcwd()."\\".$filename);
+                $arr['currdir']=iconv('GB2312','UTF-8//TRANSLIT//IGNORE',getcwd()."\\".$filename);
                 $arr['name']=$filename;
                 $arr['size']=filesize($filename);
                 $arr['ctime']=filectime($filename);
